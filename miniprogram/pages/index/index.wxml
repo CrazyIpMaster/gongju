@@ -22,10 +22,10 @@
 
     <!-- 功能菜单 -->
     <t-grid column="2" border="{{false}}" hover>
-      <t-grid-item text="数据录入" image="assets/icons/input.png" bind:tap="onNavigateToInput" />
-      <t-grid-item text="趋势分析" image="assets/icons/analysis.png" bind:tap="onNavigateToAnalysis" />
-      <t-grid-item text="历史记录" image="assets/icons/history.png" bind:tap="onNavigateToHistory" />
-      <t-grid-item text="年度报告" image="assets/icons/report.png" bind:tap="onNavigateToReport" />
+      <t-grid-item text="数据录入" image="/assets/icons/input.png" bind:tap="onNavigateToInput" />
+      <t-grid-item text="趋势分析" image="/assets/icons/analysis.png" bind:tap="onNavigateToAnalysis" />
+      <t-grid-item text="历史记录" image="/assets/icons/history.png" bind:tap="onNavigateToHistory" />
+      <t-grid-item text="年度报告" image="/assets/icons/report.png" bind:tap="onNavigateToReport" />
     </t-grid>
 
     <!-- 数据概览 -->

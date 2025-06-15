@@ -1,11 +1,17 @@
 {
   "pages": [
+    "pages/login/login",
+    "pages/register/register",
     "pages/index/index",
     "pages/input/input",
     "pages/analysis/analysis",
     "pages/history/history",
     "pages/report/report",
-    "pages/venue/venue"
+    "pages/venue/venue",
+    "pages/profile/profile",
+    "pages/company/company",
+    "pages/company-apply/company-apply",
+    "pages/company-manage/company-manage"
   ],
   "window": {
     "navigationBarTextStyle": "black",
@@ -41,6 +47,12 @@
         "text": "报告",
         "iconPath": "assets/icons/report.png",
         "selectedIconPath": "assets/icons/report-active.png"
+      },
+      {
+        "pagePath": "pages/profile/profile",
+        "text": "我的",
+        "iconPath": "assets/icons/profile.png",
+        "selectedIconPath": "assets/icons/profile-active.png"
       }
     ]
   },
@@ -59,6 +71,12 @@
     "t-divider": "tdesign-miniprogram/divider/divider",
     "t-dialog": "tdesign-miniprogram/dialog/dialog",
     "t-message": "tdesign-miniprogram/message/message",
-    "t-loading": "tdesign-miniprogram/loading/loading"
+    "t-loading": "tdesign-miniprogram/loading/loading",
+    "t-avatar": "tdesign-miniprogram/avatar/avatar",
+    "t-radio": "tdesign-miniprogram/radio/radio",
+    "t-radio-group": "tdesign-miniprogram/radio-group/radio-group",
+    "t-checkbox": "tdesign-miniprogram/checkbox/checkbox",
+    "t-checkbox-group": "tdesign-miniprogram/checkbox-group/checkbox-group",
+    "t-toast": "tdesign-miniprogram/toast/toast"
   }
 }

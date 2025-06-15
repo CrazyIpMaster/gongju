@@ -1,321 +1,208 @@
-// venue.ts
 interface IVenueType {
-  value: string;
-  label: string;
+value: string;
+label: string;
 }
 
 interface IVenue {
-  id: string;
-  name: string;
-  area: number;
-  type: string;
-  typeText: string;
-  address: string;
-  remark: string;
+id: string;
+name: string;
+area: number;
+type: string;
+typeText: string;
+address: string;
+remark: string;
 }
 
 interface INewVenue {
-  name: string;
-  area: string;
-  type: string;
-  address: string;
-  remark: string;
+name: string;
+area: string;
+type: string;
+address: string;
+remark: string;
 }
 
 Page({
-  data: {
-    currentVenueId: 'venue1',
-    newVenue: {
-      name: '',
-      area: '',
-      type: 'office',
-      address: '',
-      remark: ''
-    } as INewVenue,
-    editVenue: {
-      id: '',
-      name: '',
-      area: '',
-      type: 'office',
-      address: '',
-      remark: ''
-    },
-    showEditDialog: false,
-    venueTypes: [
-      { value: 'office', label: '办公楼' },
-      { value: 'commercial', label: '商业中心' },
-      { value: 'residential', label: '住宅小区' },
-      { value: 'mixed', label: '综合体' }
-    ] as IVenueType[],
-    venueList: [
-      {
-        id: 'venue1',
-        name: '金融中心A座',
-        area: 12500,
-        type: 'office',
-        typeText: '办公楼',
-        address: '北京市朝阳区金融街1号',
-        remark: '高端写字楼，配套设施完善'
-      },
-      {
-        id: 'venue2',
-        name: '商业广场B区',
-        area: 8600,
-        type: 'commercial',
-        typeText: '商业中心',
-        address: '北京市海淀区中关村大街88号',
-        remark: '购物中心，人流量大'
-      },
-      {
-        id: 'venue3',
-        name: '办公大厦C栋',
-        area: 15200,
-        type: 'office',
-        typeText: '办公楼',
-        address: '北京市西城区复兴门内大街168号',
-        remark: '传统办公楼，位置优越'
-      }
-    ] as IVenue[]
-  },
+data: {
+currentVenueId: 'venue1',
+newVenue: {
+name: '',
+area: '',
+type: 'office',
+address: '',
+remark: ''
+} as INewVenue,
+editVenue: null as IVenue | null,
+showEditDialog: false,
+venueTypes: [
+{value: 'office', label: '办公楼'},
+{value: 'commercial', label: '商业中心'},
+{value: 'residential', label: '住宅小区'},
+{value: 'mixed', label: '综合体'}
+] as IVenueType[],
+venueList: [
+{
+id: 'venue1',
+name: '金融中心A座',
+area: 12500,
+type: 'office',
+typeText: '办公楼',
+address: '北京市朝阳区金融街1号',
+remark: '高端写字楼，配套设施完善'
+},
+{
+id: 'venue2',
+name: '商业广场B区',
+area: 8600,
+type: 'commercial',
+typeText: '商业中心',
+address: '北京市海淀区中关村大街88号',
+remark: '购物中心，人流量大'
+},
+{
+id: 'venue3',
+name: '办公大厦C栋',
+area: 15200,
+type: 'office',
+typeText: '办公楼',
+address: '北京市西城区复兴门内大街168号',
+remark: '传统办公楼，位置优越'
+}
+] as IVenue[]
+},
 
-  onLoad() {
-    // 初始化页面
-  },
+onLoad() {
 
-  // 新增场地相关方法
-  onNameChange(e: any) {
-    this.setData({
-      'newVenue.name': e.detail.value
-    });
-  },
+},
 
-  onAreaChange(e: any) {
-    this.setData({
-      'newVenue.area': e.detail.value
-    });
-  },
+onNameChange(e: any) {
+this.setData({
+'newVenue.name': e.detail.value
+});
+},
 
-  onTypeChange(e: any) {
-    this.setData({
-      'newVenue.type': e.detail.value
-    });
-  },
+onAreaChange(e: any) {
+this.setData({
+'newVenue.area': e.detail.value
+});
+},
 
-  onAddressChange(e: any) {
-    this.setData({
-      'newVenue.address': e.detail.value
-    });
-  },
+onTypeChange(e: any) {
+this.setData({
+'newVenue.type': e.detail.value
+});
+},
 
-  onRemarkChange(e: any) {
-    this.setData({
-      'newVenue.remark': e.detail.value
-    });
-  },
+onAddressChange(e: any) {
+this.setData({
+'newVenue.address': e.detail.value
+});
+},
 
-  onAddVenue() {
-    const { newVenue, venueList, venueTypes } = this.data;
-    
-    // 验证必填字段
-    if (!newVenue.name.trim()) {
-      wx.showToast({
-        title: '请输入场地名称',
-        icon: 'none'
-      });
-      return;
-    }
-    
-    if (!newVenue.area || Number(newVenue.area) <= 0) {
-      wx.showToast({
-        title: '请输入有效面积',
-        icon: 'none'
-      });
-      return;
-    }
+onRemarkChange(e: any) {
+this.setData({
+'newVenue.remark': e.detail.value
+});
+},
 
-    // 检查名称是否重复
-    const exists = venueList.some(venue => venue.name === newVenue.name.trim());
-    if (exists) {
-      wx.showToast({
-        title: '场地名称已存在',
-        icon: 'none'
-      });
-      return;
-    }
+onAddVenue() {
+const {newVenue, venueList, venueTypes} = this.data;
 
-    // 添加新场地
-    const typeText = venueTypes.find(type => type.value === newVenue.type)?.label || '';
-    const newVenueData: IVenue = {
-      id: 'venue' + Date.now(),
-      name: newVenue.name.trim(),
-      area: Number(newVenue.area),
-      type: newVenue.type,
-      typeText: typeText,
-      address: newVenue.address.trim(),
-      remark: newVenue.remark.trim()
-    };
+if (!newVenue.name.trim()) {
+wx.showToast({
+title: '请输入场地名称',
+icon: 'none'
+});
+return;
+}
 
-    this.setData({
-      venueList: [...venueList, newVenueData],
-      newVenue: {
-        name: '',
-        area: '',
-        type: 'office',
-        address: '',
-        remark: ''
-      }
-    });
+if (!newVenue.area || Number(newVenue.area) <= 0) {
+wx.showToast({
+title: '请输入有效面积',
+icon: 'none'
+});
+return;
+}
 
-    wx.showToast({
-      title: '添加成功',
-      icon: 'success'
-    });
-  },
+const exists = venueList.some(venue => venue.name === newVenue.name.trim());
+if (exists) {
+wx.showToast({
+title: '场地名称已存在',
+icon: 'none'
+});
+return;
+}
 
-  // 场地管理相关方法
-  onEditVenue(e: any) {
-    const venue = e.currentTarget.dataset.venue;
-    this.setData({
-      editVenue: { ...venue },
-      showEditDialog: true
-    });
-  },
+const typeText = venueTypes.find(type => type.value === newVenue.type)?.label || '';
+const newVenueData: IVenue = {
+id: 'venue' + Date.now(),
+name: newVenue.name.trim(),
+area: Number(newVenue.area),
+type: newVenue.type,
+typeText: typeText,
+address: newVenue.address.trim(),
+remark: newVenue.remark.trim()
+};
 
-  onSwitchVenue(e: any) {
-    const venue = e.currentTarget.dataset.venue;
-    this.setData({
-      currentVenueId: venue.id
-    });
-    wx.showToast({
-      title: '切换成功',
-      icon: 'success'
-    });
-  },
+this.setData({
+venueList: [...venueList, newVenueData],
+newVenue: {
+name: '',
+area: '',
+type: 'office',
+address: '',
+remark: ''
+}
+});
 
-  onSetDefault(e: any) {
-    const venue = e.currentTarget.dataset.venue;
-    // TODO: 设置为默认场地
-    wx.showToast({
-      title: '设为默认成功',
-      icon: 'success'
-    });
-  },
+wx.showToast({
+title: '添加成功',
+icon: 'success'
+});
+},
 
-  onDeleteVenue(e: any) {
-    const venue = e.currentTarget.dataset.venue;
-    
-    wx.showModal({
-      title: '确认删除',
-      content: `确定要删除场地"${venue.name}"吗？`,
-      success: (res) => {
-        if (res.confirm) {
-          const venueList = this.data.venueList.filter((item: IVenue) => item.id !== venue.id);
-          this.setData({
-            venueList: venueList
-          });
-          wx.showToast({
-            title: '删除成功',
-            icon: 'success'
-          });
-        }
-      }
-    });
-  },
+onEditVenue(e: any) {
+const venue = e.currentTarget.dataset.venue;
+this.setData({
+editVenue: {...venue},
+showEditDialog: true
+});
+},
 
-  // 编辑场地相关方法
-  onEditNameChange(e: any) {
-    this.setData({
-      'editVenue.name': e.detail.value
-    });
-  },
+onSwitchVenue(e: any) {
+const venue = e.currentTarget.dataset.venue;
+this.setData({
+currentVenueId: venue.id
+});
+wx.showToast({
+title: '切换成功',
+icon: 'success'
+});
+},
 
-  onEditAreaChange(e: any) {
-    this.setData({
-      'editVenue.area': e.detail.value
-    });
-  },
+onSetDefault(e: any) {
+const venue = e.currentTarget.dataset.venue;
 
-  onEditTypeChange(e: any) {
-    const selectedType = this.data.venueTypes.find(type => type.value === e.detail.value);
-    this.setData({
-      'editVenue.type': e.detail.value,
-      'editVenue.typeText': selectedType ? selectedType.label : ''
-    });
-  },
+wx.showToast({
+title: '设为默认成功',
+icon: 'success'
+});
+},
 
-  onEditAddressChange(e: any) {
-    this.setData({
-      'editVenue.address': e.detail.value
-    });
-  },
-
-  onEditRemarkChange(e: any) {
-    this.setData({
-      'editVenue.remark': e.detail.value
-    });
-  },
-
-  onConfirmEdit() {
-    const { editVenue, venueList, venueTypes } = this.data;
-    
-    // 验证必填字段
-    if (!editVenue.name.trim()) {
-      wx.showToast({
-        title: '请输入场地名称',
-        icon: 'none'
-      });
-      return;
-    }
-    
-    if (!editVenue.area || Number(editVenue.area) <= 0) {
-      wx.showToast({
-        title: '请输入有效面积',
-        icon: 'none'
-      });
-      return;
-    }
-
-    // 检查名称是否重复（排除自己）
-    const exists = venueList.some(venue => venue.name === editVenue.name.trim() && venue.id !== editVenue.id);
-    if (exists) {
-      wx.showToast({
-        title: '场地名称已存在',
-        icon: 'none'
-      });
-      return;
-    }
-
-    // 更新场地信息
-    const typeText = venueTypes.find(type => type.value === editVenue.type)?.label || '';
-    const updatedVenueList = venueList.map((venue: IVenue) => {
-      if (venue.id === editVenue.id) {
-        return {
-          ...venue,
-          name: editVenue.name.trim(),
-          area: Number(editVenue.area),
-          type: editVenue.type,
-          typeText: typeText,
-          address: editVenue.address.trim(),
-          remark: editVenue.remark.trim()
-        };
-      }
-      return venue;
-    });
-
-    this.setData({
-      venueList: updatedVenueList,
-      showEditDialog: false
-    });
-
-    wx.showToast({
-      title: '修改成功',
-      icon: 'success'
-    });
-  },
-
-  onCancelEdit() {
-    this.setData({
-      showEditDialog: false
-    });
-  }
-}); 
+onDeleteVenue(e: any) {
+const venue = e.currentTarget.dataset.venue;
+wx.showModal({
+title: '确认删除',
+content: `确定要删除场地"${venue.name}"吗？`,
+success: (res) => {
+if (res.confirm) {
+const venueList = this.data.venueList.filter(v => v.id !== venue.id);
+this.setData({venueList});
+wx.showToast({
+title: '删除成功',
+icon: 'success'
+});
+}
+}
+});
+}
+});

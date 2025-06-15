@@ -1,0 +1,137 @@
+.manage-container {
+  background-color: #f5f5f5;
+  min-height: 100vh;
+}
+
+.header {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  padding: 40rpx;
+  color: white;
+}
+
+.company-name {
+  font-size: 42rpx;
+  font-weight: bold;
+  margin-bottom: 15rpx;
+}
+
+.company-desc {
+  font-size: 28rpx;
+  opacity: 0.8;
+  margin-bottom: 20rpx;
+  line-height: 1.4;
+}
+
+.company-stats {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.stat-item {
+  font-size: 24rpx;
+  background: rgba(255, 255, 255, 0.2);
+  padding: 8rpx 16rpx;
+  border-radius: 20rpx;
+  margin-right: 20rpx;
+  margin-bottom: 10rpx;
+}
+
+.section {
+  margin: 20rpx 0;
+  background: white;
+}
+
+.section-title {
+  padding: 30rpx 30rpx 20rpx 30rpx;
+  font-size: 32rpx;
+  font-weight: bold;
+  color: #333;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.application-item {
+  padding: 30rpx;
+  border-bottom: 1rpx solid #f0f0f0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.application-item:last-child {
+  border-bottom: none;
+}
+
+.applicant-info {
+  flex: 1;
+}
+
+.applicant-name {
+  font-size: 32rpx;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 8rpx;
+}
+
+.applicant-phone {
+  font-size: 28rpx;
+  color: #666;
+  margin-bottom: 8rpx;
+}
+
+.apply-time {
+  font-size: 24rpx;
+  color: #999;
+}
+
+.application-actions {
+  display: flex;
+  gap: 20rpx;
+}
+
+.empty-applications {
+  text-align: center;
+  padding: 100rpx 40rpx;
+  background: white;
+  margin: 20rpx 0;
+}
+
+.empty-icon {
+  font-size: 120rpx;
+  margin-bottom: 30rpx;
+}
+
+.empty-text {
+  font-size: 32rpx;
+  color: #666;
+}
+
+.dialog-content {
+  padding: 20rpx 0;
+}
+
+.dialog-text {
+  font-size: 28rpx;
+  color: #333;
+  margin-bottom: 30rpx;
+}
+
+.dialog-tips {
+  margin-top: 30rpx;
+  padding: 20rpx;
+  background: #fff3cd;
+  border-radius: 8rpx;
+}
+
+.dialog-tips text {
+  display: block;
+  font-size: 24rpx;
+  color: #856404;
+  line-height: 1.5;
+  margin-bottom: 8rpx;
+}
+
+.dialog-tips text:last-child {
+  margin-bottom: 0;
+} 

@@ -1,0 +1,49 @@
+<view class="login-container">
+  <view class="login-header">
+    <view class="logo">
+      <text class="logo-text">坪效工具</text>
+    </view>
+    <view class="welcome-text">欢迎使用坪效计算工具</view>
+  </view>
+
+  <view class="login-form">
+    <view class="form-item">
+      <t-input
+        value="{{phone}}"
+        placeholder="请输入手机号"
+        type="number"
+        maxlength="11"
+        bind:change="onPhoneChange"
+        prefix-icon="mobile"
+      />
+    </view>
+    
+    <view class="form-item">
+      <t-input
+        value="{{password}}"
+        placeholder="请输入密码"
+        type="password"
+        bind:change="onPasswordChange"
+        prefix-icon="lock-on"
+      />
+    </view>
+
+    <view class="form-actions">
+      <t-button
+        theme="primary"
+        size="large"
+        block
+        loading="{{loading}}"
+        bind:tap="handleLogin"
+      >
+        登录
+      </t-button>
+    </view>
+
+    <view class="form-footer">
+      <text class="register-link" bind:tap="goToRegister">还没有账号？立即注册</text>
+    </view>
+  </view>
+
+  <t-toast id="t-toast" />
+</view> 

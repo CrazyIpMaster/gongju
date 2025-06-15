@@ -1,0 +1,66 @@
+<view class="profile-container" wx:if="{{userInfo}}">
+  <!-- 用户信息卡片 -->
+  <view class="user-card">
+    <view class="user-avatar">
+      <t-avatar size="large" image="{{userInfo.avatar || '/assets/icons/profile.png'}}" />
+    </view>
+    <view class="user-info">
+      <view class="user-name">{{userInfo.nickname}}</view>
+      <view class="user-phone">{{userInfo.phone}}</view>
+      <view class="user-role" wx:if="{{userInfo.companyName}}">
+        {{userInfo.companyName}} - {{roleText}}
+      </view>
+    </view>
+  </view>
+
+  <!-- 公司信息 -->
+  <view class="section" wx:if="{{userInfo.companyId}}">
+    <view class="section-title">公司信息</view>
+    <t-cell-group>
+      <t-cell title="公司名称" note="{{companyInfo.name}}" />
+      <t-cell title="成员数量" note="{{companyInfo.memberCount}}人" />
+      <t-cell title="我的角色" note="{{roleText}}" />
+      <t-cell 
+        title="管理公司" 
+        arrow 
+        bind:click="goToCompanyManage"
+        wx:if="{{userInfo.role === 'admin'}}"
+      />
+    </t-cell-group>
+  </view>
+
+  <!-- 公司操作 -->
+  <view class="section" wx:if="{{!userInfo.companyId}}">
+    <view class="section-title">公司管理</view>
+    <t-cell-group>
+      <t-cell title="创建公司" arrow bind:click="goToCreateCompany" />
+      <t-cell title="申请加入公司" arrow bind:click="goToApplyCompany" />
+    </t-cell-group>
+  </view>
+
+  <!-- 功能菜单 -->
+  <view class="section">
+    <view class="section-title">功能菜单</view>
+    <t-cell-group>
+      <t-cell title="历史记录" arrow bind:click="goToHistory" />
+      <t-cell title="数据报告" arrow bind:click="goToReport" />
+      <t-cell title="设置" arrow bind:click="goToSettings" />
+    </t-cell-group>
+  </view>
+
+  <!-- 退出登录 -->
+  <view class="logout-section">
+    <t-button theme="danger" size="large" block bind:tap="handleLogout">
+      退出登录
+    </t-button>
+  </view>
+</view>
+
+<!-- 未登录状态 -->
+<view class="login-prompt" wx:else>
+  <view class="prompt-content">
+    <view class="prompt-icon">👤</view>
+    <view class="prompt-text">请先登录</view>
+    <t-button theme="primary" bind:tap="goToLogin">立即登录</t-button>
+  </view>
+</view> 

@@ -2,7 +2,12 @@
   "name": "miniprogram-ts-quickstart",
   "version": "1.0.0",
   "description": "",
-  "scripts": {},
+  "scripts": {
+    "optimize": "node scripts/optimize-simple.js",
+    "optimize:restore": "node scripts/optimize-simple.js --restore",
+    "optimize:clean": "node scripts/optimize-simple.js --clean-backups",
+    "build": "npm run optimize"
+  },
   "keywords": [],
   "author": "",
   "license": "",
@@ -10,6 +15,9 @@
     "tdesign-miniprogram": "^1.9.4"
   },
   "devDependencies": {
-    "miniprogram-api-typings": "^4.0.7"
+    "@types/node": "^24.0.1",
+    "miniprogram-api-typings": "^4.0.7",
+    "terser": "^5.42.0",
+    "typescript": "^5.8.3"
   }
 }

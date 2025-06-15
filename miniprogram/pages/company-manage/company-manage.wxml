@@ -1,0 +1,95 @@
+<view class="manage-container">
+  <view class="header">
+    <view class="company-info">
+      <view class="company-name">{{companyInfo.name}}</view>
+      <view class="company-desc" wx:if="{{companyInfo.description}}">{{companyInfo.description}}</view>
+      <view class="company-stats">
+        <text class="stat-item">成员：{{companyInfo.memberCount}}人</text>
+        <text class="stat-item">创建时间：{{createTimeText}}</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 待处理申请 -->
+  <view class="section" wx:if="{{pendingApplications.length > 0}}">
+    <view class="section-title">
+      <text>待处理申请</text>
+      <t-tag theme="warning" size="small">{{pendingApplications.length}}</t-tag>
+    </view>
+    <view 
+      class="application-item" 
+      wx:for="{{pendingApplications}}" 
+      wx:key="id"
+    >
+      <view class="applicant-info">
+        <view class="applicant-name">{{item.userNickname}}</view>
+        <view class="applicant-phone">{{item.userPhone}}</view>
+        <view class="apply-time">申请时间：{{item.applyTimeText}}</view>
+      </view>
+      <view class="application-actions">
+        <t-button 
+          size="small" 
+          theme="success" 
+          bind:tap="handleApplication"
+          data-id="{{item.id}}"
+          data-action="approve"
+        >
+          通过
+        </t-button>
+        <t-button 
+          size="small" 
+          theme="danger" 
+          bind:tap="handleApplication"
+          data-id="{{item.id}}"
+          data-action="reject"
+        >
+          拒绝
+        </t-button>
+      </view>
+    </view>
+  </view>
+
+  <!-- 无待处理申请 -->
+  <view class="empty-applications" wx:else>
+    <view class="empty-icon">📋</view>
+    <view class="empty-text">暂无待处理申请</view>
+  </view>
+
+  <!-- 管理功能 -->
+  <view class="section">
+    <view class="section-title">管理功能</view>
+    <t-cell-group>
+      <t-cell title="公司成员" note="{{companyInfo.memberCount}}人" arrow bind:click="viewMembers" />
+      <t-cell title="申请记录" arrow bind:click="viewApplicationHistory" />
+      <t-cell title="更换管理员" arrow bind:click="changeAdmin" />
+    </t-cell-group>
+  </view>
+
+  <!-- 更换管理员弹窗 -->
+  <t-dialog
+    visible="{{showAdminDialog}}"
+    title="更换管理员"
+    content="请输入新管理员的手机号码"
+    confirm-btn="确认更换"
+    cancel-btn="取消"
+    bind:confirm="confirmChangeAdmin"
+    bind:cancel="cancelChangeAdmin"
+  >
+    <view slot="content">
+      <view class="dialog-content">
+        <view class="dialog-text">请输入新管理员的手机号码：</view>
+        <t-input
+          value="{{newAdminPhone}}"
+          placeholder="请输入手机号"
+          type="number"
+          maxlength="11"
+          bind:change="onNewAdminPhoneChange"
+        />
+        <view class="dialog-tips">
+          <text>• 新管理员必须是公司成员</text>
+          <text>• 更换后您将失去管理员权限</text>
+        </view>
+      </view>
+    </view>
+  </t-dialog>
+</view> 

@@ -1,0 +1,72 @@
+<view class="apply-container">
+  <view class="form-header">
+    <view class="header-title">申请加入公司</view>
+    <view class="header-desc">选择要加入的公司</view>
+  </view>
+
+  <view class="form-content">
+    <!-- 搜索框 -->
+    <view class="search-section">
+      <t-input
+        value="{{searchKeyword}}"
+        placeholder="搜索公司名称"
+        prefix-icon="search"
+        bind:change="onSearchChange"
+        bind:confirm="handleSearch"
+      />
+    </view>
+
+    <!-- 公司列表 -->
+    <view class="company-list" wx:if="{{companyList.length > 0}}">
+      <view class="list-title">可申请的公司</view>
+      <view 
+        class="company-item" 
+        wx:for="{{companyList}}" 
+        wx:key="id"
+        bind:tap="selectCompany"
+        data-company="{{item}}"
+      >
+        <view class="company-info">
+          <view class="company-name">{{item.name}}</view>
+          <view class="company-desc" wx:if="{{item.description}}">{{item.description}}</view>
+          <view class="company-meta">
+            <text class="meta-item">成员：{{item.memberCount}}人</text>
+            <text class="meta-item">创建时间：{{item.createTimeText}}</text>
+          </view>
+        </view>
+        <view class="company-action">
+          <t-button size="small" theme="primary">申请加入</t-button>
+        </view>
+      </view>
+    </view>
+
+    <!-- 空状态 -->
+    <view class="empty-state" wx:else>
+      <view class="empty-icon">🏢</view>
+      <view class="empty-text">暂无可申请的公司</view>
+      <view class="empty-desc">请联系公司管理员获取公司信息</view>
+    </view>
+
+    <!-- 我的申请记录 -->
+    <view class="my-applications" wx:if="{{myApplications.length > 0}}">
+      <view class="section-title">我的申请记录</view>
+      <view 
+        class="application-item" 
+        wx:for="{{myApplications}}" 
+        wx:key="id"
+      >
+        <view class="application-info">
+          <view class="application-company">{{item.companyName}}</view>
+          <view class="application-time">申请时间：{{item.applyTimeText}}</view>
+        </view>
+        <view class="application-status">
+          <t-tag 
+            theme="{{item.status === 'pending' ? 'warning' : (item.status === 'approved' ? 'success' : 'danger')}}"
+          >
+            {{item.statusText}}
+          </t-tag>
+        </view>
+      </view>
+    </view>
+  </view>
+</view> 

@@ -1,0 +1,61 @@
+const formatTime = (date: Date) => {
+  const year = date.getFullYear()
+  const month = date.getMonth() + 1
+  const day = date.getDate()
+  const hour = date.getHours()
+  const minute = date.getMinutes()
+  const second = date.getSeconds()
+
+  return (
+    [year, month, day].map(formatNumber).join('/') +
+    ' ' +
+    [hour, minute, second].map(formatNumber).join(':')
+  )
+}
+
+const formatNumber = (n: number) => {
+  const s = n.toString()
+  return s[1] ? s : '0' + s
+}
+
+/**
+ * 安全的页面导航函数，避免开发者工具路由错误
+ * @param url 目标页面路径
+ * @param delay 延迟时间（毫秒），默认50ms
+ */
+const safeNavigateTo = (url: string, delay: number = 50) => {
+  setTimeout(() => {
+    wx.navigateTo({
+      url: url,
+      fail: (err) => {
+        console.error('页面跳转失败:', err)
+        wx.showToast({
+          title: '页面跳转失败',
+          icon: 'none'
+        })
+      }
+    })
+  }, delay)
+}
+
+/**
+ * 安全的页面重定向函数
+ * @param url 目标页面路径
+ * @param delay 延迟时间（毫秒），默认50ms
+ */
+const safeRedirectTo = (url: string, delay: number = 50) => {
+  setTimeout(() => {
+    wx.redirectTo({
+      url: url,
+      fail: (err) => {
+        console.error('页面重定向失败:', err)
+        wx.showToast({
+          title: '页面跳转失败',
+          icon: 'none'
+        })
+      }
+    })
+  }, delay)
+}
+
+export { formatTime, safeNavigateTo, safeRedirectTo }

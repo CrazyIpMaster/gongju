@@ -4,7 +4,19 @@
 /* 禁用 TDesign 字体加载，避免网络请求错误 */
 @font-face {
   font-family: 't-icon';
-  src: none;
+  src: none !important;
+}
+
+/* 禁用所有可能的外部字体加载 */
+.t-icon,
+[class*="t-icon-"],
+[class^="t-icon-"] {
+  font-family: inherit !important;
+}
+
+/* 确保不加载任何外部字体资源 */
+page, view, text, button, input, textarea {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', 'Helvetica Neue', Helvetica, Arial, sans-serif !important;
 }
 
 /* ==================== 全局基础样式 ==================== */

@@ -1,0 +1,67 @@
+ <view class="register-container">
+  <view class="register-header">
+    <view class="logo">
+      <text class="logo-text">创建账号</text>
+    </view>
+    <view class="welcome-text">加入坪效计算工具</view>
+  </view>
+
+  <view class="register-form">
+    <view class="form-item">
+      <t-input
+        value="{{phone}}"
+        placeholder="请输入手机号"
+        type="number"
+        maxlength="11"
+        bind:change="onPhoneChange"
+        prefix-icon="mobile"
+      />
+    </view>
+    
+    <view class="form-item">
+      <t-input
+        value="{{nickname}}"
+        placeholder="请输入昵称"
+        maxlength="20"
+        bind:change="onNicknameChange"
+        prefix-icon="user"
+      />
+    </view>
+    
+    <view class="form-item">
+      <t-input
+        value="{{password}}"
+        placeholder="请输入密码（至少6位）"
+        type="password"
+        bind:change="onPasswordChange"
+        prefix-icon="lock-on"
+      />
+    </view>
+
+    <view class="form-item">
+      <t-input
+        value="{{confirmPassword}}"
+        placeholder="请确认密码"
+        type="password"
+        bind:change="onConfirmPasswordChange"
+        prefix-icon="lock-on"
+      />
+    </view>
+
+    <view class="form-actions">
+      <t-button
+        theme="primary"
+        size="large"
+        block
+        loading="{{loading}}"
+        bind:tap="handleRegister"
+      >
+        注册
+      </t-button>
+    </view>
+
+    <view class="form-footer">
+      <text class="login-link" bind:tap="goToLogin">已有账号？立即登录</text>
+    </view>
+  </view>
+</view> 

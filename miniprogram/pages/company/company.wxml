@@ -1,0 +1,56 @@
+<view class="company-container">
+  <view class="form-header">
+    <view class="header-title">创建公司</view>
+    <view class="header-desc">创建公司后，您将成为管理员</view>
+  </view>
+
+  <view class="form-content">
+    <view class="form-item">
+      <view class="form-label">公司名称 *</view>
+      <t-input
+        value="{{companyName}}"
+        placeholder="请输入公司名称"
+        maxlength="50"
+        bind:change="onCompanyNameChange"
+      />
+    </view>
+
+    <view class="form-item">
+      <view class="form-label">公司描述</view>
+      <t-input
+        value="{{description}}"
+        placeholder="请输入公司描述（可选）"
+        maxlength="200"
+        type="textarea"
+        bind:change="onDescriptionChange"
+      />
+    </view>
+
+    <view class="admin-info">
+      <view class="info-title">管理员信息</view>
+      <t-cell-group>
+        <t-cell title="姓名" note="{{userInfo.nickname}}" />
+        <t-cell title="手机号" note="{{userInfo.phone}}" />
+      </t-cell-group>
+    </view>
+
+    <view class="form-actions">
+      <t-button
+        theme="primary"
+        size="large"
+        block
+        loading="{{loading}}"
+        bind:tap="handleCreateCompany"
+      >
+        创建公司
+      </t-button>
+    </view>
+
+    <view class="form-tips">
+      <view class="tips-title">温馨提示：</view>
+      <view class="tips-item">• 创建公司后，您将成为该公司的管理员</view>
+      <view class="tips-item">• 管理员可以审核员工加入申请</view>
+      <view class="tips-item">• 如需更换管理员，请联系客服</view>
+    </view>
+  </view>
+</view> 
