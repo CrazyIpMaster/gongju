@@ -1,0 +1,67 @@
+<view class="container">
+  <!-- 场地选择和对比设置 -->
+  <view class="card form-section">
+    <view class="card-title">分析设置</view>
+    <t-cell-group>
+      <t-cell title="当前场地" note="{{currentVenue.label}}" hover bind:tap="onSelectVenue">
+        <view slot="right-icon" class="custom-arrow">›</view>
+      </t-cell>
+      <t-cell title="对比分析" hover>
+        <t-switch slot="note" value="{{enableCompare}}" bind:change="onCompareChange" />
+      </t-cell>
+      <t-cell wx:if="{{enableCompare}}" title="对比场地" note="{{compareVenue.label}}" hover bind:tap="onSelectCompareVenue">
+        <view slot="right-icon" class="custom-arrow">›</view>
+      </t-cell>
+    </t-cell-group>
+  </view>
+
+  <!-- 时间范围选择 -->
+  <view class="card form-section">
+    <view class="card-title">时间范围</view>
+    <t-cell-group>
+      <t-cell title="时间跨度" note="最近6个月" hover bind:tap="onSelectTimeRange">
+        <view slot="right-icon" class="custom-arrow">›</view>
+      </t-cell>
+    </t-cell-group>
+  </view>
+
+  <!-- 趋势图表 -->
+  <view class="card">
+    <view class="card-title">月度收支趋势</view>
+    <view class="chart-container">
+      <!-- 这里将使用 ECharts 渲染图表 -->
+      <view class="chart-placeholder">图表加载中...</view>
+    </view>
+  </view>
+
+  <!-- 毛利率变化 -->
+  <view class="card">
+    <view class="card-title">毛利率变化</view>
+    <view class="chart-container">
+      <!-- 这里将使用 ECharts 渲染图表 -->
+      <view class="chart-placeholder">图表加载中...</view>
+    </view>
+  </view>
+
+  <!-- 坪效对比 -->
+  <view wx:if="{{enableCompare}}" class="card">
+    <view class="card-title">坪效对比</view>
+    <view class="chart-container">
+      <!-- 这里将使用 ECharts 渲染图表 -->
+      <view class="chart-placeholder">图表加载中...</view>
+    </view>
+  </view>
+
+  <!-- 智能分析建议 -->
+  <view class="card">
+    <view class="card-title">智能分析建议</view>
+    <view class="analysis-list">
+      <view class="list-item" wx:for="{{analysisSuggestions}}" wx:key="index">
+        <view class="list-item-header">
+          <t-tag theme="{{item.type}}" variant="light" size="small">{{item.tag}}</t-tag>
+        </view>
+        <view class="list-item-content">{{item.content}}</view>
+      </view>
+    </view>
+  </view>
+</view> 

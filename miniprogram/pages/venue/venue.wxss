@@ -1,0 +1,19 @@
+/* 场地管理页面特有样式 */
+/* 所有基础样式已在 app.wxss 中定义 */
+
+/* 场地管理页面已使用全局样式 */
+
+/* 场地类型选择器样式 */
+.t-cell[title="场地类型"] .t-cell__note {
+  color: #366ef4 !important;
+  font-weight: 500 !important;
+}
+
+/* 操作按钮组间距 */
+.action-bar .t-button {
+  margin-right: 12rpx;
+}
+
+.action-bar .t-button:last-child {
+  margin-right: 0;
+} 

@@ -1,0 +1,71 @@
+<view class="container">
+  <view class="card form-section">
+    <view class="card-title">基础信息</view>
+    <t-cell-group>
+      <t-cell title="场地选择" note="{{currentVenue.label}}" hover>
+        <view slot="right-icon" class="custom-arrow">›</view>
+      </t-cell>
+      <t-cell title="录入月份">
+        <t-input slot="note" type="text" value="{{currentMonth}}" placeholder="2024-01" bind:change="onMonthChange" />
+      </t-cell>
+      <t-cell title="管理面积">
+        <t-input slot="note" type="number" value="{{area}}" suffix="㎡" bind:change="onAreaChange" />
+      </t-cell>
+    </t-cell-group>
+  </view>
+
+  <!-- 收入明细 -->
+  <view class="card form-section">
+    <view class="card-title">收入明细</view>
+    <t-cell-group>
+      <t-cell title="物业管理费">
+        <t-input slot="note" type="number" value="{{income.propertyManagement}}" prefix="¥" bind:change="onIncomeChange" data-type="propertyManagement" />
+      </t-cell>
+      <t-cell title="停车费收入">
+        <t-input slot="note" type="number" value="{{income.parking}}" prefix="¥" bind:change="onIncomeChange" data-type="parking" />
+      </t-cell>
+      <t-cell title="其他收入">
+        <t-input slot="note" type="number" value="{{income.others}}" prefix="¥" bind:change="onIncomeChange" data-type="others" />
+      </t-cell>
+    </t-cell-group>
+  </view>
+
+  <!-- 支出明细 -->
+  <view class="card form-section">
+    <view class="card-title">支出明细</view>
+    <t-cell-group>
+      <t-cell title="人工成本">
+        <t-input slot="note" type="number" value="{{expense.labor}}" prefix="¥" bind:change="onExpenseChange" data-type="labor" />
+      </t-cell>
+      <t-cell title="维护费用">
+        <t-input slot="note" type="number" value="{{expense.maintenance}}" prefix="¥" bind:change="onExpenseChange" data-type="maintenance" />
+      </t-cell>
+      <t-cell title="其他支出">
+        <t-input slot="note" type="number" value="{{expense.others}}" prefix="¥" bind:change="onExpenseChange" data-type="others" />
+      </t-cell>
+    </t-cell-group>
+  </view>
+
+  <!-- 计算结果 -->
+  <view class="card">
+    <view class="card-title">计算结果</view>
+    <view class="grid-3">
+      <view class="data-item">
+        <view class="data-value">¥{{result.grossProfit}}</view>
+        <view class="data-label">毛利润</view>
+      </view>
+      <view class="data-item">
+        <view class="data-value">{{result.profitRate}}%</view>
+        <view class="data-label">毛利率</view>
+      </view>
+      <view class="data-item data-item-highlight">
+        <view class="data-value">¥{{result.perSquareMeter}}</view>
+        <view class="data-label">坪效值</view>
+      </view>
+    </view>
+  </view>
+
+  <view class="button-group">
+    <t-button theme="primary" block bind:tap="onSave">保存数据</t-button>
+  </view>
+</view> 

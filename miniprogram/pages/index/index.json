@@ -1,0 +1,10 @@
+{
+  "navigationBarTitleText": "坪效计算工具",
+  "usingComponents": {
+    "t-picker": "tdesign-miniprogram/picker/picker",
+    "t-cell": "tdesign-miniprogram/cell/cell",
+    "t-grid": "tdesign-miniprogram/grid/grid",
+    "t-grid-item": "tdesign-miniprogram/grid-item/grid-item",
+    "t-button": "tdesign-miniprogram/button/button"
+  }
+}

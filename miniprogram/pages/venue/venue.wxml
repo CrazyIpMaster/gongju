@@ -1,0 +1,70 @@
+<view class="container">
+  <!-- 新增场地 -->
+  <view class="card form-section">
+    <view class="card-title">新增场地</view>
+    <t-cell-group>
+      <t-cell title="场地名称">
+        <t-input slot="note" value="{{newVenue.name}}" placeholder="请输入场地名称" bind:change="onNameChange" />
+      </t-cell>
+      <t-cell title="管理面积">
+        <t-input slot="note" type="number" value="{{newVenue.area}}" suffix="㎡" placeholder="请输入面积" bind:change="onAreaChange" />
+      </t-cell>
+      <t-cell title="场地类型" note="{{newVenue.typeLabel}}" hover bind:tap="onSelectType">
+        <view slot="right-icon" class="custom-arrow">›</view>
+      </t-cell>
+      <t-cell title="详细地址">
+        <t-input slot="note" value="{{newVenue.address}}" placeholder="请输入详细地址" bind:change="onAddressChange" />
+      </t-cell>
+      <t-cell title="备注信息">
+        <t-input slot="note" value="{{newVenue.remark}}" placeholder="选填" bind:change="onRemarkChange" />
+      </t-cell>
+    </t-cell-group>
+    
+    <view class="button-group">
+      <t-button theme="primary" block bind:tap="onAddVenue">添加场地</t-button>
+    </view>
+  </view>
+
+  <!-- 现有场地管理 -->
+  <view class="card">
+    <view class="card-title">现有场地管理</view>
+    <view class="venue-list">
+      <view class="list-item" wx:for="{{venueList}}" wx:key="id">
+        <view class="list-item-header">
+          <view class="list-item-title">{{item.name}}</view>
+          <t-tag theme="{{item.isActive ? 'success' : 'default'}}" variant="light" size="small">
+            {{item.isActive ? '当前' : '备用'}}
+          </t-tag>
+        </view>
+        
+        <view class="detail-grid">
+          <view class="detail-item">
+            <text class="detail-label">面积:</text>
+            <text class="detail-value">{{item.area}}㎡</text>
+          </view>
+          <view class="detail-item">
+            <text class="detail-label">类型:</text>
+            <text class="detail-value">{{item.type}}</text>
+          </view>
+          <view class="detail-item">
+            <text class="detail-label">地址:</text>
+            <text class="detail-value">{{item.address}}</text>
+          </view>
+        </view>
+        
+        <view class="action-bar">
+          <t-button size="small" theme="default" bind:tap="onEditVenue" data-venue="{{item}}">编辑</t-button>
+          <t-button size="small" theme="{{item.isActive ? 'default' : 'primary'}}" 
+                    bind:tap="onSwitchVenue" data-venue="{{item}}">
+            {{item.isActive ? '已选中' : '切换'}}
+          </t-button>
+          <t-button size="small" theme="danger" bind:tap="onDeleteVenue" data-venue="{{item}}">删除</t-button>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 确认对话框 -->
+  <t-dialog visible="{{showDialog}}" title="{{dialogTitle}}" content="{{dialogContent}}" 
+            confirm-btn="确认" cancel-btn="取消" bind:confirm="onDialogConfirm" bind:cancel="onDialogCancel" />
+</view> 

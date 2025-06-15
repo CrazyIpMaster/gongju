@@ -1,0 +1,25 @@
+/* 趋势分析页面特有样式 */
+/* 所有基础样式已在 app.wxss 中定义 */
+
+/* 分析页面已使用全局样式 */
+
+/* 设置项样式优化 */
+.t-cell[title="当前场地"] .t-cell__note,
+.t-cell[title="对比场地"] .t-cell__note,
+.t-cell[title="时间跨度"] .t-cell__note {
+  color: #366ef4 !important;
+  font-weight: 500 !important;
+}
+
+/* 图表容器优化 */
+.chart-container {
+  margin: 24rpx 0;
+  border: 1px solid #e6e8eb;
+}
+
+.chart-placeholder {
+  color: #999;
+  font-size: 28rpx;
+  text-align: center;
+  padding: 80rpx 0;
+} 

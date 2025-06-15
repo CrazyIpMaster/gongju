@@ -1,0 +1,54 @@
+<!--index.wxml-->
+<scroll-view class="scrollarea" scroll-y type="list">
+  <view class="container-gradient">
+    <!-- 头部 -->
+    <view class="page-header">
+      <view class="page-title">坪效计算工具</view>
+      <view class="page-subtitle">智能物业收支管理系统</view>
+    </view>
+
+    <!-- 场地选择器 -->
+    <view class="card">
+      <view class="card-header">
+        <view class="card-title">当前场地</view>
+        <t-button size="small" theme="default" bind:tap="onManageVenue">管理</t-button>
+      </view>
+      <t-picker value="{{currentVenue}}" data-source="{{venues}}" bind:change="onVenueChange">
+        <t-cell title="选择场地" note="{{currentVenueLabel}}">
+          <view slot="right-icon" class="custom-arrow">›</view>
+        </t-cell>
+      </t-picker>
+    </view>
+
+    <!-- 功能菜单 -->
+    <t-grid column="2" border="{{false}}" hover>
+      <t-grid-item text="数据录入" image="assets/icons/input.png" bind:tap="onNavigateToInput" />
+      <t-grid-item text="趋势分析" image="assets/icons/analysis.png" bind:tap="onNavigateToAnalysis" />
+      <t-grid-item text="历史记录" image="assets/icons/history.png" bind:tap="onNavigateToHistory" />
+      <t-grid-item text="年度报告" image="assets/icons/report.png" bind:tap="onNavigateToReport" />
+    </t-grid>
+
+    <!-- 数据概览 -->
+    <view class="card">
+      <view class="card-title">本月概览</view>
+      <view class="grid-2">
+        <view class="data-item">
+          <view class="data-value">¥{{overview.totalIncome}}</view>
+          <view class="data-label">总收入</view>
+        </view>
+        <view class="data-item">
+          <view class="data-value">¥{{overview.totalExpense}}</view>
+          <view class="data-label">总支出</view>
+        </view>
+        <view class="data-item">
+          <view class="data-value">{{overview.profitRate}}%</view>
+          <view class="data-label">毛利率</view>
+        </view>
+        <view class="data-item data-item-highlight">
+          <view class="data-value">¥{{overview.perSquareMeter}}</view>
+          <view class="data-label">坪效值</view>
+        </view>
+      </view>
+    </view>
+  </view>
+</scroll-view>

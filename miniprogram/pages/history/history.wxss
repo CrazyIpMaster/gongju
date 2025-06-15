@@ -1,0 +1,32 @@
+/* 历史记录页面特有样式 */
+/* 所有基础样式已在 app.wxss 中定义 */
+
+/* 历史记录页面已使用全局样式 */
+
+/* 筛选条件样式优化 */
+.t-cell[title="场地筛选"] .t-cell__note,
+.t-cell[title="时间筛选"] .t-cell__note,
+.t-cell[title="排序方式"] .t-cell__note {
+  color: #366ef4 !important;
+  font-weight: 500 !important;
+}
+
+/* 环比变化信息 */
+.change-info {
+  display: flex;
+  gap: 24rpx;
+  margin-top: 16rpx;
+  padding-top: 16rpx;
+  border-top: 1px solid #f0f0f0;
+}
+
+.change-item {
+  font-size: 24rpx;
+  font-weight: 500;
+}
+
+/* 选中状态样式 */
+.list-item.selected {
+  border: 2rpx solid #366ef4;
+  background-color: #f8f9ff;
+} 

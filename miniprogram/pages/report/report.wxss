@@ -1,0 +1,64 @@
+/* 年度报告页面特有样式 */
+/* 所有基础样式已在 app.wxss 中定义 */
+
+/* 报告配置样式优化 */
+.t-cell[title="报告年份"] .t-cell__note,
+.t-cell[title="报告类型"] .t-cell__note,
+.t-cell[title="选择场地"] .t-cell__note {
+  color: #366ef4 !important;
+  font-weight: 500 !important;
+}
+
+/* 最佳表现数据项 */
+.best-performance .t-cell__note {
+  color: #52c41a !important;
+  font-weight: 600 !important;
+}
+
+/* 季度项目样式 */
+.quarter-item {
+  padding: 24rpx;
+  background: #f8f9ff;
+  border-radius: 12rpx;
+  border: 1px solid #e6e8eb;
+  text-align: center;
+}
+
+.quarter-title {
+  font-size: 28rpx;
+  font-weight: 600;
+  color: #1a1a1a;
+  margin-bottom: 16rpx;
+}
+
+.quarter-metrics {
+  display: flex;
+  justify-content: space-around;
+  margin: 16rpx 0;
+}
+
+.metric {
+  text-align: center;
+}
+
+/* 报告页面已使用全局样式 */
+
+.suggestion-icon {
+  margin-right: 12rpx;
+  font-size: 32rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40rpx;
+  height: 40rpx;
+}
+
+/* 最佳表现区域 */
+.best-performance {
+  margin-top: 32rpx;
+}
+
+/* 趋势分析区域 */
+.trend-analysis {
+  margin-top: 32rpx;
+} 

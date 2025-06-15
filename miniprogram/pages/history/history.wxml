@@ -1,0 +1,68 @@
+<view class="container">
+  <!-- 筛选条件 -->
+  <view class="card form-section">
+    <view class="card-title">筛选条件</view>
+    <t-cell-group>
+      <t-cell title="场地筛选" note="全部场地" hover bind:tap="onVenueFilter">
+        <view slot="right-icon" class="custom-arrow">›</view>
+      </t-cell>
+      <t-cell title="时间筛选" note="全部时间" hover bind:tap="onTimeFilter">
+        <view slot="right-icon" class="custom-arrow">›</view>
+      </t-cell>
+      <t-cell title="排序方式" note="时间倒序" hover bind:tap="onSortFilter">
+        <view slot="right-icon" class="custom-arrow">›</view>
+      </t-cell>
+    </t-cell-group>
+  </view>
+
+  <!-- 历史记录列表 -->
+  <view class="card">
+    <view class="card-title">历史记录</view>
+    <view class="history-list">
+      <view class="list-item" wx:for="{{historyList}}" wx:key="id" bind:tap="onItemTap" data-item="{{item}}">
+        <view class="list-item-header">
+          <view class="list-item-title">{{item.date}}</view>
+          <t-tag theme="{{item.status === 'excellent' ? 'success' : item.status === 'good' ? 'primary' : 'warning'}}" variant="light" size="small">
+            {{item.statusText}}
+          </t-tag>
+        </view>
+        <view class="list-item-subtitle">{{item.venueName}}</view>
+        
+        <view class="grid-2" style="margin-top: 16rpx;">
+          <view class="data-item">
+            <view class="data-value" style="font-size: 28rpx;">¥{{item.totalIncome}}</view>
+            <view class="data-label">总收入</view>
+          </view>
+          <view class="data-item">
+            <view class="data-value" style="font-size: 28rpx;">¥{{item.totalExpense}}</view>
+            <view class="data-label">总支出</view>
+          </view>
+          <view class="data-item">
+            <view class="data-value" style="font-size: 28rpx;">{{item.profitRate}}%</view>
+            <view class="data-label">毛利率</view>
+          </view>
+          <view class="data-item data-item-highlight">
+            <view class="data-value" style="font-size: 28rpx;">¥{{item.perSquareMeter}}</view>
+            <view class="data-label">坪效值</view>
+          </view>
+        </view>
+        
+        <view class="change-info" wx:if="{{item.change}}">
+          <view class="change-item {{item.change.profitRate > 0 ? 'status-positive' : 'status-negative'}}">
+            毛利率环比: {{item.change.profitRate > 0 ? '+' : ''}}{{item.change.profitRate}}%
+          </view>
+          <view class="change-item {{item.change.perSquareMeter > 0 ? 'status-positive' : 'status-negative'}}">
+            坪效环比: {{item.change.perSquareMeter > 0 ? '+' : ''}}{{item.change.perSquareMeter}}%
+          </view>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 对比分析按钮 -->
+  <view class="button-group" wx:if="{{selectedItems.length > 1}}">
+    <t-button theme="primary" block bind:tap="onCompareAnalysis">
+      对比分析 ({{selectedItems.length}}项)
+    </t-button>
+  </view>
+</view> 

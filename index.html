@@ -1,0 +1,1679 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>坪效计算工具 - 微信小程序原型</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
+            background: #f5f5f5;
+            color: #333;
+        }
+        
+        .phone-container {
+            width: 375px;
+            height: 812px;
+            margin: 20px auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .status-bar {
+            height: 44px;
+            background: #000;
+            color: white;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 20px;
+            font-size: 14px;
+            font-weight: 600;
+        }
+        
+        .page {
+            display: none;
+            height: calc(100% - 44px);
+            overflow-y: auto;
+        }
+        
+        .page.active {
+            display: block;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+        
+        .header h1 {
+            font-size: 20px;
+            margin-bottom: 5px;
+        }
+        
+        .header p {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+        
+        .content {
+            padding: 20px;
+        }
+        
+        .menu-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+        
+        .menu-item {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.1);
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+        
+        .menu-item:hover {
+            transform: translateY(-2px);
+        }
+        
+        .menu-item .icon {
+            font-size: 32px;
+            margin-bottom: 10px;
+        }
+        
+        .menu-item h3 {
+            font-size: 16px;
+            margin-bottom: 5px;
+            color: #333;
+        }
+        
+        .menu-item p {
+            font-size: 12px;
+            color: #666;
+        }
+        
+        .stats-overview {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.1);
+        }
+        
+        .stats-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 15px;
+            color: #333;
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+        
+        .stat-item {
+            text-align: center;
+            padding: 10px;
+        }
+        
+        .stat-value {
+            font-size: 24px;
+            font-weight: 600;
+            color: #667eea;
+            margin-bottom: 5px;
+        }
+        
+        .stat-label {
+            font-size: 12px;
+            color: #666;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-label {
+            font-size: 14px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 8px;
+            display: block;
+        }
+        
+        .form-input {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 16px;
+            background: white;
+        }
+        
+        .form-input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        
+        .btn {
+            width: 100%;
+            padding: 15px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+        }
+        
+        .chart-container {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.1);
+        }
+        
+        .chart-placeholder {
+            height: 200px;
+            background: linear-gradient(45deg, #f0f2f5 25%, transparent 25%),
+                        linear-gradient(-45deg, #f0f2f5 25%, transparent 25%),
+                        linear-gradient(45deg, transparent 75%, #f0f2f5 75%),
+                        linear-gradient(-45deg, transparent 75%, #f0f2f5 75%);
+            background-size: 20px 20px;
+            background-position: 0 0, 0 10px, 10px -10px, -10px 0px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #666;
+            font-size: 14px;
+            margin-bottom: 10px;
+        }
+        
+        .navigation {
+            position: fixed;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 375px;
+            height: 60px;
+            background: white;
+            border-top: 1px solid #e0e0e0;
+            display: flex;
+            align-items: center;
+        }
+        
+        .nav-item {
+            flex: 1;
+            text-align: center;
+            padding: 8px;
+            cursor: pointer;
+            color: #666;
+            font-size: 12px;
+            transition: color 0.2s;
+        }
+        
+        .nav-item.active {
+            color: #667eea;
+        }
+        
+        .nav-item .icon {
+            font-size: 20px;
+            margin-bottom: 4px;
+            display: block;
+        }
+        
+        .record-item {
+            background: white;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 10px;
+            border-left: 4px solid #667eea;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+        }
+        
+        .record-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        
+        .record-date {
+            font-size: 14px;
+            color: #666;
+        }
+        
+        .record-amount {
+            font-size: 16px;
+            font-weight: 600;
+            color: #667eea;
+        }
+        
+        .record-details {
+            font-size: 14px;
+            color: #333;
+        }
+        
+        .year-summary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
+        .year-title {
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 15px;
+        }
+        
+        .year-stats {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 15px;
+        }
+        
+        .year-stat {
+            text-align: center;
+        }
+        
+        .year-stat-value {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+        
+        .year-stat-label {
+            font-size: 12px;
+            opacity: 0.9;
+        }
+        
+        .section-block {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.1);
+        }
+        
+        .income-section {
+            border-left: 4px solid #10b981;
+        }
+        
+        .expense-section {
+            border-left: 4px solid #ef4444;
+        }
+        
+        .result-section {
+            border-left: 4px solid #667eea;
+            background: linear-gradient(135deg, #f0f4ff 0%, #e0e7ff 100%);
+        }
+        
+        .section-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #f0f0f0;
+        }
+        
+        .section-icon {
+            font-size: 20px;
+            margin-right: 10px;
+        }
+        
+        .section-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #333;
+            flex: 1;
+        }
+        
+        .section-total {
+            font-size: 16px;
+            font-weight: 600;
+            color: #667eea;
+        }
+        
+        .income-section .section-total {
+            color: #10b981;
+        }
+        
+        .expense-section .section-total {
+            color: #ef4444;
+        }
+        
+        .result-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+        
+        .result-item {
+            text-align: center;
+            padding: 15px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+        }
+        
+        .result-label {
+            font-size: 12px;
+            color: #666;
+            margin-bottom: 8px;
+        }
+        
+        .result-value {
+            font-size: 18px;
+            font-weight: 600;
+            color: #667eea;
+        }
+        
+        .venue-selector {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.1);
+        }
+        
+        .venue-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        
+        .venue-icon {
+            font-size: 20px;
+            margin-right: 10px;
+        }
+        
+        .venue-header h3 {
+            flex: 1;
+            font-size: 16px;
+            font-weight: 600;
+            color: #333;
+            margin: 0;
+        }
+        
+        .venue-manage-btn {
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            padding: 6px 12px;
+            font-size: 12px;
+            cursor: pointer;
+        }
+        
+        .venue-select {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 16px;
+            background: white;
+            color: #333;
+        }
+        
+        .current-venue-info {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 12px;
+            padding: 15px 20px;
+            margin-bottom: 20px;
+        }
+        
+        .venue-info-header {
+            display: flex;
+            align-items: center;
+        }
+        
+        .venue-name {
+            flex: 1;
+            font-size: 16px;
+            font-weight: 600;
+            margin: 0 10px;
+        }
+        
+        .change-venue-btn {
+            background: rgba(255,255,255,0.2);
+            color: white;
+            border: 1px solid rgba(255,255,255,0.3);
+            border-radius: 6px;
+            padding: 6px 12px;
+            font-size: 12px;
+            cursor: pointer;
+        }
+        
+        .venue-card {
+            background: white;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 15px;
+            border: 1px solid #e0e0e0;
+            transition: all 0.2s;
+        }
+        
+        .venue-card:hover {
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        
+        .active-venue {
+            border-color: #667eea;
+            background: linear-gradient(135deg, #f0f4ff 0%, #e0e7ff 100%);
+        }
+        
+        .venue-card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        
+        .venue-card-header h4 {
+            margin: 0;
+            font-size: 16px;
+            font-weight: 600;
+            color: #333;
+        }
+        
+        .venue-badge {
+            background: #667eea;
+            color: white;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 11px;
+            font-weight: 600;
+        }
+        
+        .venue-badge.active {
+            background: #10b981;
+        }
+        
+        .venue-details {
+            margin-bottom: 15px;
+        }
+        
+        .venue-details p {
+            margin: 5px 0;
+            font-size: 14px;
+            color: #666;
+        }
+        
+        .detail-label {
+            font-weight: 600;
+            color: #333;
+        }
+        
+        .venue-actions {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .btn-small {
+            padding: 6px 12px;
+            border: none;
+            border-radius: 4px;
+            font-size: 12px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .btn-edit {
+            background: #f59e0b;
+            color: white;
+        }
+        
+        .btn-delete {
+            background: #ef4444;
+            color: white;
+        }
+        
+        .venue-filter {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.1);
+        }
+        
+        .filter-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        
+        .filter-icon {
+            font-size: 16px;
+            margin-right: 8px;
+        }
+        
+        .filter-header h3 {
+            margin: 0;
+            font-size: 16px;
+            font-weight: 600;
+            color: #333;
+        }
+        
+        .filter-controls {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+        
+        .filter-select {
+            padding: 10px 12px;
+            border: 1px solid #e0e0e0;
+            border-radius: 6px;
+            font-size: 14px;
+            background: white;
+            color: #333;
+        }
+        
+        .record-venue {
+            font-size: 12px;
+            color: #667eea;
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+        
+        .venue-comparison {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.1);
+        }
+        
+        .comparison-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 15px;
+        }
+        
+        .comparison-header h3 {
+            margin: 0;
+            font-size: 16px;
+            font-weight: 600;
+            color: #333;
+            flex: 1;
+            margin-left: 8px;
+        }
+        
+        .comparison-toggle {
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            padding: 8px 16px;
+            font-size: 12px;
+            cursor: pointer;
+        }
+        
+        .comparison-controls {
+            border-top: 1px solid #f0f0f0;
+            padding-top: 15px;
+        }
+        
+        .comparison-selects {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+        
+        .select-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        
+        .select-group label {
+            font-size: 14px;
+            font-weight: 600;
+            color: #333;
+        }
+        
+        .comparison-results {
+            margin-top: 15px;
+            padding: 15px;
+            background: #f8f9ff;
+            border-radius: 8px;
+        }
+        
+        .comparison-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+            padding: 8px 0;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        
+        .comparison-item:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+        }
+        
+        .venue-label {
+            font-weight: 600;
+            color: #333;
+        }
+        
+        .comparison-value {
+            font-size: 14px;
+            color: #667eea;
+        }
+        
+        .annual-venue-selector {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.1);
+        }
+        
+        .annual-selector-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        
+        .annual-selector-header h3 {
+            margin: 0;
+            font-size: 16px;
+            font-weight: 600;
+            color: #333;
+            margin-left: 8px;
+        }
+        
+        .annual-controls {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            align-items: end;
+        }
+        
+        .annual-control-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        
+        .annual-control-group label {
+            font-size: 14px;
+            font-weight: 600;
+            color: #333;
+        }
+        
+        .all-venues-summary {
+            margin-bottom: 20px;
+        }
+        
+        .venues-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 15px;
+        }
+        
+        .venue-annual-card {
+            background: white;
+            border-radius: 8px;
+            padding: 15px;
+            border-left: 4px solid #667eea;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        
+        .venue-annual-card h4 {
+            margin: 0 0 10px 0;
+            font-size: 16px;
+            font-weight: 600;
+            color: #333;
+        }
+        
+        .venue-annual-stats p {
+            margin: 5px 0;
+            font-size: 14px;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+    <div class="phone-container">
+        <!-- 状态栏 -->
+        <div class="status-bar">
+            <span>9:41</span>
+            <span>坪效计算工具</span>
+            <span>100%</span>
+        </div>
+        
+        <!-- 首页 -->
+        <div class="page active" id="home">
+            <div class="header">
+                <h1>坪效计算工具</h1>
+                <p>智能物业收支管理系统</p>
+            </div>
+            <div class="content">
+                <!-- 场地选择器 -->
+                <div class="venue-selector">
+                    <div class="venue-header">
+                        <span class="venue-icon">🏢</span>
+                        <h3>当前场地</h3>
+                        <button class="venue-manage-btn" onclick="showPage('venues')">管理</button>
+                    </div>
+                    <select class="venue-select" id="current-venue" onchange="switchVenue()">
+                        <option value="venue1">金融中心A座</option>
+                        <option value="venue2">商业广场B区</option>
+                        <option value="venue3">办公大厦C栋</option>
+                    </select>
+                </div>
+                
+                <div class="menu-grid">
+                    <div class="menu-item" onclick="showPage('input')">
+                        <div class="icon">📊</div>
+                        <h3>数据录入</h3>
+                        <p>记录月度收支</p>
+                    </div>
+                    <div class="menu-item" onclick="showPage('analysis')">
+                        <div class="icon">📈</div>
+                        <h3>趋势分析</h3>
+                        <p>查看图表报告</p>
+                    </div>
+                    <div class="menu-item" onclick="showPage('records')">
+                        <div class="icon">📋</div>
+                        <h3>历史记录</h3>
+                        <p>查看往期数据</p>
+                    </div>
+                    <div class="menu-item" onclick="showPage('annual')">
+                        <div class="icon">📅</div>
+                        <h3>年度报告</h3>
+                        <p>年度盈利分析</p>
+                    </div>
+                </div>
+                
+                <div class="stats-overview">
+                    <div class="stats-title">本月概览</div>
+                    <div class="stats-grid">
+                        <div class="stat-item">
+                            <div class="stat-value">¥285,600</div>
+                            <div class="stat-label">总收入</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value">¥198,420</div>
+                            <div class="stat-label">总支出</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value">30.5%</div>
+                            <div class="stat-label">毛利率</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value">¥1,258</div>
+                            <div class="stat-label">坪效值</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 数据录入页面 -->
+        <div class="page" id="input">
+            <div class="header">
+                <h1>数据录入</h1>
+                <p>记录本月收支情况</p>
+            </div>
+            <div class="content">
+                <!-- 场地信息显示 -->
+                <div class="current-venue-info">
+                    <div class="venue-info-header">
+                        <span class="venue-icon">🏢</span>
+                        <span class="venue-name" id="input-venue-name">金融中心A座</span>
+                        <button class="change-venue-btn" onclick="showPage('home')">切换</button>
+                    </div>
+                </div>
+                
+                <form>
+                    <div class="form-group">
+                        <label class="form-label">月份</label>
+                        <input type="month" class="form-input" value="2024-01">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">管理面积 (平方米)</label>
+                        <input type="number" class="form-input" placeholder="请输入管理面积" value="12500" id="area-input">
+                    </div>
+                    
+                    <!-- 收入板块 -->
+                    <div class="section-block income-section">
+                        <div class="section-header">
+                            <span class="section-icon">💰</span>
+                            <h3 class="section-title">收入明细</h3>
+                            <span class="section-total" id="income-total">¥285,600</span>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label">物业管理费</label>
+                            <input type="number" class="form-input income-input" placeholder="请输入物业管理费" value="180000" oninput="calculateTotals()">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label">停车费收入</label>
+                            <input type="number" class="form-input income-input" placeholder="请输入停车费收入" value="45600" oninput="calculateTotals()">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label">其他收入</label>
+                            <input type="number" class="form-input income-input" placeholder="请输入其他收入" value="60000" oninput="calculateTotals()">
+                        </div>
+                    </div>
+                    
+                    <!-- 支出板块 -->
+                    <div class="section-block expense-section">
+                        <div class="section-header">
+                            <span class="section-icon">💸</span>
+                            <h3 class="section-title">支出明细</h3>
+                            <span class="section-total" id="expense-total">¥198,420</span>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label">人工成本</label>
+                            <input type="number" class="form-input expense-input" placeholder="请输入人工成本" value="120000" oninput="calculateTotals()">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label">维护费用</label>
+                            <input type="number" class="form-input expense-input" placeholder="请输入维护费用" value="35420" oninput="calculateTotals()">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label">其他支出</label>
+                            <input type="number" class="form-input expense-input" placeholder="请输入其他支出" value="43000" oninput="calculateTotals()">
+                        </div>
+                    </div>
+                    
+                    <!-- 计算结果板块 -->
+                    <div class="section-block result-section">
+                        <div class="section-header">
+                            <span class="section-icon">📊</span>
+                            <h3 class="section-title">计算结果</h3>
+                        </div>
+                        
+                        <div class="result-grid">
+                            <div class="result-item">
+                                <div class="result-label">毛利润</div>
+                                <div class="result-value" id="profit">¥87,180</div>
+                            </div>
+                            <div class="result-item">
+                                <div class="result-label">毛利率</div>
+                                <div class="result-value" id="profit-rate">30.5%</div>
+                            </div>
+                            <div class="result-item">
+                                <div class="result-label">坪效值</div>
+                                <div class="result-value" id="efficiency">¥1,258/㎡</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <button type="submit" class="btn btn-primary">保存数据</button>
+                </form>
+            </div>
+        </div>
+        
+        <!-- 趋势分析页面 -->
+        <div class="page" id="analysis">
+            <div class="header">
+                <h1>趋势分析</h1>
+                <p>数据可视化报告</p>
+            </div>
+            <div class="content">
+                <!-- 分析页面场地信息 -->
+                <div class="current-venue-info">
+                    <div class="venue-info-header">
+                        <span class="venue-icon">🏢</span>
+                        <span class="venue-name" id="analysis-venue-name">金融中心A座</span>
+                        <button class="change-venue-btn" onclick="showPage('home')">切换场地</button>
+                    </div>
+                </div>
+                
+                <!-- 场地对比选择 -->
+                <div class="venue-comparison">
+                    <div class="comparison-header">
+                        <span class="section-icon">⚖️</span>
+                        <h3>场地对比分析</h3>
+                        <button class="comparison-toggle" onclick="toggleComparison()">启用对比</button>
+                    </div>
+                    <div class="comparison-controls" id="comparison-controls" style="display: none;">
+                        <div class="comparison-selects">
+                            <div class="select-group">
+                                <label>对比场地A:</label>
+                                <select class="filter-select" id="compare-venue-a">
+                                    <option value="venue1" selected>金融中心A座</option>
+                                    <option value="venue2">商业广场B区</option>
+                                    <option value="venue3">办公大厦C栋</option>
+                                </select>
+                            </div>
+                            <div class="select-group">
+                                <label>对比场地B:</label>
+                                <select class="filter-select" id="compare-venue-b">
+                                    <option value="venue1">金融中心A座</option>
+                                    <option value="venue2" selected>商业广场B区</option>
+                                    <option value="venue3">办公大厦C栋</option>
+                                </select>
+                            </div>
+                        </div>
+                        <button class="btn btn-primary" onclick="updateComparison()">更新对比</button>
+                    </div>
+                </div>
+                
+                <div class="chart-container">
+                    <h3 id="trend-chart-title">月度收支趋势 - 金融中心A座</h3>
+                    <div class="chart-placeholder">📊 收支趋势图表</div>
+                    <p style="font-size: 14px; color: #666;" id="trend-summary">对比上月：收入增长 +12.5%，支出增长 +8.3%</p>
+                </div>
+                
+                <div class="chart-container">
+                    <h3 id="profit-chart-title">毛利率变化 - 金融中心A座</h3>
+                    <div class="chart-placeholder">📈 毛利率趋势图</div>
+                    <p style="font-size: 14px; color: #666;" id="profit-summary">本月毛利率：30.5%，较上月提升 2.8%</p>
+                </div>
+                
+                <div class="chart-container">
+                    <h3 id="efficiency-chart-title">坪效分析 - 金融中心A座</h3>
+                    <div class="chart-placeholder">📊 坪效对比图</div>
+                    <p style="font-size: 14px; color: #666;" id="efficiency-summary">当前坪效：¥23/㎡，行业平均：¥18/㎡</p>
+                </div>
+                
+                <!-- 场地对比图表 (默认隐藏) -->
+                <div class="chart-container" id="comparison-chart" style="display: none;">
+                    <h3>场地对比分析</h3>
+                    <div class="chart-placeholder">📊 多场地对比图表</div>
+                    <div class="comparison-results" id="comparison-results">
+                        <div class="comparison-item">
+                            <span class="venue-label">金融中心A座:</span>
+                            <span class="comparison-value">坪效 ¥23/㎡ | 毛利率 30.5%</span>
+                        </div>
+                        <div class="comparison-item">
+                            <span class="venue-label">商业广场B区:</span>
+                            <span class="comparison-value">坪效 ¥23/㎡ | 毛利率 26.8%</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="stats-overview">
+                    <div class="stats-title">智能建议</div>
+                    <div style="padding: 15px; background: #f8f9ff; border-radius: 8px; margin-top: 10px;">
+                        <p style="font-size: 14px; line-height: 1.6; color: #333;">
+                            💡 根据数据分析，建议：<br>
+                            1. 停车费收入表现优异，可考虑优化停车位利用率<br>
+                            2. 人工成本占比较高，建议评估人员配置效率<br>
+                            3. 坪效高于行业平均水平，保持良好运营状态
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 历史记录页面 -->
+        <div class="page" id="records">
+            <div class="header">
+                <h1>历史记录</h1>
+                <p>查看往期数据记录</p>
+            </div>
+            <div class="content">
+                <!-- 场地筛选 -->
+                <div class="venue-filter">
+                    <div class="filter-header">
+                        <span class="filter-icon">🔍</span>
+                        <h3>筛选条件</h3>
+                    </div>
+                    <div class="filter-controls">
+                        <select class="filter-select" id="record-venue-filter">
+                            <option value="all">全部场地</option>
+                            <option value="venue1" selected>金融中心A座</option>
+                            <option value="venue2">商业广场B区</option>
+                            <option value="venue3">办公大厦C栋</option>
+                        </select>
+                        <select class="filter-select" id="record-year-filter">
+                            <option value="all">全部年份</option>
+                            <option value="2024" selected>2024年</option>
+                            <option value="2023">2023年</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="record-item">
+                    <div class="record-header">
+                        <span class="record-date">2024年1月</span>
+                        <span class="record-amount">毛利率: 30.5%</span>
+                    </div>
+                    <div class="record-venue">🏢 金融中心A座</div>
+                    <div class="record-details">
+                        收入: ¥285,600 | 支出: ¥198,420 | 坪效: ¥1,258/㎡
+                    </div>
+                </div>
+                
+                <div class="record-item">
+                    <div class="record-header">
+                        <span class="record-date">2023年12月</span>
+                        <span class="record-amount">毛利率: 27.7%</span>
+                    </div>
+                    <div class="record-venue">🏢 金融中心A座</div>
+                    <div class="record-details">
+                        收入: ¥254,200 | 支出: ¥183,800 | 坪效: ¥1,120/㎡
+                    </div>
+                </div>
+                
+                <div class="record-item">
+                    <div class="record-header">
+                        <span class="record-date">2023年11月</span>
+                        <span class="record-amount">毛利率: 29.1%</span>
+                    </div>
+                    <div class="record-venue">🏬 商业广场B区</div>
+                    <div class="record-details">
+                        收入: ¥268,500 | 支出: ¥190,350 | 坪效: ¥1,183/㎡
+                    </div>
+                </div>
+                
+                <div class="record-item">
+                    <div class="record-header">
+                        <span class="record-date">2023年10月</span>
+                        <span class="record-amount">毛利率: 26.3%</span>
+                    </div>
+                    <div class="record-venue">🏢 办公大厦C栋</div>
+                    <div class="record-details">
+                        收入: ¥245,800 | 支出: ¥181,170 | 坪效: ¥1,083/㎡
+                    </div>
+                </div>
+                
+                <div class="record-item">
+                    <div class="record-header">
+                        <span class="record-date">2023年9月</span>
+                        <span class="record-amount">毛利率: 28.4%</span>
+                    </div>
+                    <div class="record-venue">🏢 金融中心A座</div>
+                    <div class="record-details">
+                        收入: ¥271,200 | 支出: ¥194,260 | 坪效: ¥1,195/㎡
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 场地管理页面 -->
+        <div class="page" id="venues">
+            <div class="header">
+                <h1>场地管理</h1>
+                <p>管理和配置场地信息</p>
+            </div>
+            <div class="content">
+                <!-- 添加新场地 -->
+                <div class="section-block">
+                    <div class="section-header">
+                        <span class="section-icon">➕</span>
+                        <h3 class="section-title">添加新场地</h3>
+                    </div>
+                    <form id="add-venue-form">
+                        <div class="form-group">
+                            <label class="form-label">场地名称</label>
+                            <input type="text" class="form-input" placeholder="请输入场地名称" id="new-venue-name">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">管理面积 (平方米)</label>
+                            <input type="number" class="form-input" placeholder="请输入管理面积" id="new-venue-area">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">场地类型</label>
+                            <select class="form-input" id="new-venue-type">
+                                <option value="office">办公楼</option>
+                                <option value="commercial">商业中心</option>
+                                <option value="residential">住宅小区</option>
+                                <option value="mixed">综合体</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">地址</label>
+                            <input type="text" class="form-input" placeholder="请输入场地地址" id="new-venue-address">
+                        </div>
+                        <button type="submit" class="btn btn-primary">添加场地</button>
+                    </form>
+                </div>
+                
+                <!-- 现有场地列表 -->
+                <div class="section-block">
+                    <div class="section-header">
+                        <span class="section-icon">🏢</span>
+                        <h3 class="section-title">现有场地</h3>
+                    </div>
+                    <div class="venue-list">
+                        <div class="venue-card active-venue">
+                            <div class="venue-card-header">
+                                <h4>金融中心A座</h4>
+                                <span class="venue-badge active">当前</span>
+                            </div>
+                            <div class="venue-details">
+                                <p><span class="detail-label">面积:</span> 12,500㎡</p>
+                                <p><span class="detail-label">类型:</span> 办公楼</p>
+                                <p><span class="detail-label">地址:</span> 北京市朝阳区金融街1号</p>
+                            </div>
+                            <div class="venue-actions">
+                                <button class="btn-small btn-edit">编辑</button>
+                                <button class="btn-small btn-delete">删除</button>
+                            </div>
+                        </div>
+                        
+                        <div class="venue-card">
+                            <div class="venue-card-header">
+                                <h4>商业广场B区</h4>
+                                <span class="venue-badge">切换</span>
+                            </div>
+                            <div class="venue-details">
+                                <p><span class="detail-label">面积:</span> 8,200㎡</p>
+                                <p><span class="detail-label">类型:</span> 商业中心</p>
+                                <p><span class="detail-label">地址:</span> 上海市浦东新区商业街88号</p>
+                            </div>
+                            <div class="venue-actions">
+                                <button class="btn-small btn-edit">编辑</button>
+                                <button class="btn-small btn-delete">删除</button>
+                            </div>
+                        </div>
+                        
+                        <div class="venue-card">
+                            <div class="venue-card-header">
+                                <h4>办公大厦C栋</h4>
+                                <span class="venue-badge">切换</span>
+                            </div>
+                            <div class="venue-details">
+                                <p><span class="detail-label">面积:</span> 15,800㎡</p>
+                                <p><span class="detail-label">类型:</span> 办公楼</p>
+                                <p><span class="detail-label">地址:</span> 深圳市南山区科技园中路168号</p>
+                            </div>
+                            <div class="venue-actions">
+                                <button class="btn-small btn-edit">编辑</button>
+                                <button class="btn-small btn-delete">删除</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 年度报告页面 -->
+        <div class="page" id="annual">
+            <div class="header">
+                <h1>年度报告</h1>
+                <p>年度盈利分析报告</p>
+            </div>
+            <div class="content">
+                <!-- 年度报告场地信息 -->
+                <div class="current-venue-info">
+                    <div class="venue-info-header">
+                        <span class="venue-icon">🏢</span>
+                        <span class="venue-name" id="annual-venue-name">金融中心A座</span>
+                        <button class="change-venue-btn" onclick="showPage('home')">切换场地</button>
+                    </div>
+                </div>
+                
+                <!-- 年度场地选择器 -->
+                <div class="annual-venue-selector">
+                    <div class="annual-selector-header">
+                        <span class="section-icon">📅</span>
+                        <h3>年度报告设置</h3>
+                    </div>
+                    <div class="annual-controls">
+                        <div class="annual-control-group">
+                            <label>报告年份:</label>
+                            <select class="filter-select" id="annual-year">
+                                <option value="2024">2024年</option>
+                                <option value="2023" selected>2023年</option>
+                                <option value="2022">2022年</option>
+                            </select>
+                        </div>
+                        <div class="annual-control-group">
+                            <label>报告类型:</label>
+                            <select class="filter-select" id="annual-type">
+                                <option value="single" selected>单场地报告</option>
+                                <option value="all">全场地汇总</option>
+                                <option value="compare">场地对比</option>
+                            </select>
+                        </div>
+                        <button class="btn btn-primary" onclick="updateAnnualReport()">生成报告</button>
+                    </div>
+                </div>
+                
+                <div class="year-summary" id="annual-summary">
+                    <div class="year-title" id="annual-title">2023年度总结 - 金融中心A座</div>
+                    <div class="year-stats">
+                        <div class="year-stat">
+                            <div class="year-stat-value" id="annual-income">¥3.2M</div>
+                            <div class="year-stat-label">年度收入</div>
+                        </div>
+                        <div class="year-stat">
+                            <div class="year-stat-value" id="annual-profit-rate">28.1%</div>
+                            <div class="year-stat-label">平均毛利率</div>
+                        </div>
+                        <div class="year-stat">
+                            <div class="year-stat-value" id="annual-efficiency">¥256</div>
+                            <div class="year-stat-label">平均坪效</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 全场地汇总 (默认隐藏) -->
+                <div class="all-venues-summary" id="all-venues-summary" style="display: none;">
+                    <div class="venues-grid">
+                        <div class="venue-annual-card">
+                            <h4>🏢 金融中心A座</h4>
+                            <div class="venue-annual-stats">
+                                <p>年收入: ¥3.2M</p>
+                                <p>毛利率: 28.1%</p>
+                                <p>坪效: ¥256/㎡</p>
+                            </div>
+                        </div>
+                        <div class="venue-annual-card">
+                            <h4>🏬 商业广场B区</h4>
+                            <div class="venue-annual-stats">
+                                <p>年收入: ¥2.1M</p>
+                                <p>毛利率: 25.3%</p>
+                                <p>坪效: ¥256/㎡</p>
+                            </div>
+                        </div>
+                        <div class="venue-annual-card">
+                            <h4>🏢 办公大厦C栋</h4>
+                            <div class="venue-annual-stats">
+                                <p>年收入: ¥4.1M</p>
+                                <p>毛利率: 29.7%</p>
+                                <p>坪效: ¥259/㎡</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="chart-container">
+                    <h3 id="annual-trend-title">年度收支趋势 - 金融中心A座</h3>
+                    <div class="chart-placeholder">📊 年度趋势图表</div>
+                    <p style="font-size: 14px; color: #666;" id="annual-trend-summary">同比增长：收入 +15.2%，利润 +18.7%</p>
+                </div>
+                
+                <div class="chart-container">
+                    <h3 id="quarterly-title">季度对比分析 - 金融中心A座</h3>
+                    <div class="chart-placeholder">📈 季度对比图</div>
+                    <p style="font-size: 14px; color: #666;" id="quarterly-summary">Q4表现最佳，Q2需要重点关注</p>
+                </div>
+                
+                <div class="stats-overview">
+                    <div class="stats-title">年度亮点</div>
+                    <div style="padding: 15px; background: #f0f9ff; border-radius: 8px; margin-top: 10px;">
+                        <p style="font-size: 14px; line-height: 1.8; color: #333;">
+                            🏆 <strong>优秀表现：</strong><br>
+                            • 坪效连续6个月超过行业平均水平<br>
+                            • 毛利率稳定在25-30%区间<br>
+                            • 停车费收入同比增长22%<br><br>
+                            📈 <strong>增长点：</strong><br>
+                            • 优化人员配置，降低人工成本占比<br>
+                            • 发展增值服务，提升单位面积收益<br>
+                            • 建立智能化管理，提升运营效率
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 底部导航 -->
+        <div class="navigation">
+            <div class="nav-item active" onclick="showPage('home'); setActiveNav(this)">
+                <span class="icon">🏠</span>
+                <span>首页</span>
+            </div>
+            <div class="nav-item" onclick="showPage('input'); setActiveNav(this)">
+                <span class="icon">📊</span>
+                <span>录入</span>
+            </div>
+            <div class="nav-item" onclick="showPage('analysis'); setActiveNav(this)">
+                <span class="icon">📈</span>
+                <span>分析</span>
+            </div>
+            <div class="nav-item" onclick="showPage('annual'); setActiveNav(this)">
+                <span class="icon">📅</span>
+                <span>报告</span>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        function showPage(pageId) {
+            // 隐藏所有页面
+            const pages = document.querySelectorAll('.page');
+            pages.forEach(page => {
+                page.classList.remove('active');
+            });
+            
+            // 显示指定页面
+            document.getElementById(pageId).classList.add('active');
+        }
+        
+        function setActiveNav(navItem) {
+            // 移除所有导航项的active状态
+            const navItems = document.querySelectorAll('.nav-item');
+            navItems.forEach(item => {
+                item.classList.remove('active');
+            });
+            
+            // 设置当前导航项为active
+            navItem.classList.add('active');
+        }
+        
+        // 计算总额和相关指标
+        function calculateTotals() {
+            // 计算收入总额
+            const incomeInputs = document.querySelectorAll('.income-input');
+            let totalIncome = 0;
+            incomeInputs.forEach(input => {
+                totalIncome += parseFloat(input.value) || 0;
+            });
+            
+            // 计算支出总额
+            const expenseInputs = document.querySelectorAll('.expense-input');
+            let totalExpense = 0;
+            expenseInputs.forEach(input => {
+                totalExpense += parseFloat(input.value) || 0;
+            });
+            
+            // 获取管理面积
+            const areaInput = document.getElementById('area-input') || document.querySelector('input[placeholder="请输入管理面积"]');
+            const area = parseFloat(areaInput?.value) || 1;
+            
+            // 计算毛利润
+            const profit = totalIncome - totalExpense;
+            
+            // 计算毛利率
+            const profitRate = totalIncome > 0 ? (profit / totalIncome * 100) : 0;
+            
+            // 计算坪效
+            const efficiency = totalIncome / area;
+            
+            // 更新显示
+            document.getElementById('income-total').textContent = `¥${totalIncome.toLocaleString()}`;
+            document.getElementById('expense-total').textContent = `¥${totalExpense.toLocaleString()}`;
+            document.getElementById('profit').textContent = `¥${profit.toLocaleString()}`;
+            document.getElementById('profit-rate').textContent = `${profitRate.toFixed(1)}%`;
+            document.getElementById('efficiency').textContent = `¥${efficiency.toLocaleString()}/㎡`;
+        }
+        
+        // 场地数据
+        const venueData = {
+            venue1: {
+                name: '金融中心A座',
+                area: 12500,
+                income: [180000, 45600, 60000],
+                expense: [120000, 35420, 43000]
+            },
+            venue2: {
+                name: '商业广场B区',
+                area: 8200,
+                income: [120000, 32000, 35000],
+                expense: [85000, 28000, 25000]
+            },
+            venue3: {
+                name: '办公大厦C栋',
+                area: 15800,
+                income: [220000, 55000, 80000],
+                expense: [150000, 45000, 55000]
+            }
+        };
+        
+        let currentVenue = 'venue1';
+        
+        // 切换场地
+        function switchVenue() {
+            const venueSelect = document.getElementById('current-venue');
+            currentVenue = venueSelect.value;
+            const venue = venueData[currentVenue];
+            
+            // 更新数据录入页面的场地信息
+            const inputVenueName = document.getElementById('input-venue-name');
+            if (inputVenueName) {
+                inputVenueName.textContent = venue.name;
+            }
+            
+            // 更新分析页面的场地信息
+            const analysisVenueName = document.getElementById('analysis-venue-name');
+            if (analysisVenueName) {
+                analysisVenueName.textContent = venue.name;
+            }
+            
+            // 更新年度报告页面的场地信息
+            const annualVenueName = document.getElementById('annual-venue-name');
+            if (annualVenueName) {
+                annualVenueName.textContent = venue.name;
+            }
+            
+            // 更新管理面积
+            const areaInput = document.getElementById('area-input');
+            if (areaInput) {
+                areaInput.value = venue.area;
+            }
+            
+            // 更新收入数据
+            const incomeInputs = document.querySelectorAll('.income-input');
+            incomeInputs.forEach((input, index) => {
+                if (venue.income[index] !== undefined) {
+                    input.value = venue.income[index];
+                }
+            });
+            
+            // 更新支出数据
+            const expenseInputs = document.querySelectorAll('.expense-input');
+            expenseInputs.forEach((input, index) => {
+                if (venue.expense[index] !== undefined) {
+                    input.value = venue.expense[index];
+                }
+            });
+            
+            // 重新计算
+            calculateTotals();
+            
+            // 更新各页面数据
+            updateHomeStats();
+            updateAnalysisData();
+            updateAnnualData();
+        }
+        
+        // 更新首页统计数据
+        function updateHomeStats() {
+            const venue = venueData[currentVenue];
+            const totalIncome = venue.income.reduce((sum, val) => sum + val, 0);
+            const totalExpense = venue.expense.reduce((sum, val) => sum + val, 0);
+            const profit = totalIncome - totalExpense;
+            const profitRate = (profit / totalIncome * 100).toFixed(1);
+            const efficiency = Math.round(totalIncome / venue.area);
+            
+            // 更新首页显示
+            const statValues = document.querySelectorAll('.stat-value');
+            if (statValues.length >= 4) {
+                statValues[0].textContent = `¥${totalIncome.toLocaleString()}`;
+                statValues[1].textContent = `¥${totalExpense.toLocaleString()}`;
+                statValues[2].textContent = `${profitRate}%`;
+                statValues[3].textContent = `¥${efficiency}/㎡`;
+            }
+        }
+        
+        // 更新分析页面数据
+        function updateAnalysisData() {
+            const venue = venueData[currentVenue];
+            const totalIncome = venue.income.reduce((sum, val) => sum + val, 0);
+            const totalExpense = venue.expense.reduce((sum, val) => sum + val, 0);
+            const profit = totalIncome - totalExpense;
+            const profitRate = (profit / totalIncome * 100).toFixed(1);
+            const efficiency = Math.round(totalIncome / venue.area);
+            
+            // 更新图表标题
+            const trendTitle = document.getElementById('trend-chart-title');
+            const profitTitle = document.getElementById('profit-chart-title');
+            const efficiencyTitle = document.getElementById('efficiency-chart-title');
+            
+            if (trendTitle) trendTitle.textContent = `月度收支趋势 - ${venue.name}`;
+            if (profitTitle) profitTitle.textContent = `毛利率变化 - ${venue.name}`;
+            if (efficiencyTitle) efficiencyTitle.textContent = `坪效分析 - ${venue.name}`;
+            
+            // 更新摘要信息
+            const profitSummary = document.getElementById('profit-summary');
+            const efficiencySummary = document.getElementById('efficiency-summary');
+            
+            if (profitSummary) profitSummary.textContent = `本月毛利率：${profitRate}%，较上月提升 2.8%`;
+            if (efficiencySummary) efficiencySummary.textContent = `当前坪效：¥${efficiency}/㎡，行业平均：¥18/㎡`;
+        }
+        
+        // 更新年度报告数据
+        function updateAnnualData() {
+            const venue = venueData[currentVenue];
+            const totalIncome = venue.income.reduce((sum, val) => sum + val, 0);
+            const totalExpense = venue.expense.reduce((sum, val) => sum + val, 0);
+            const profit = totalIncome - totalExpense;
+            const profitRate = (profit / totalIncome * 100).toFixed(1);
+            const efficiency = Math.round(totalIncome / venue.area);
+            
+            // 更新年度摘要
+            const annualTitle = document.getElementById('annual-title');
+            const annualIncome = document.getElementById('annual-income');
+            const annualProfitRate = document.getElementById('annual-profit-rate');
+            const annualEfficiency = document.getElementById('annual-efficiency');
+            
+            if (annualTitle) annualTitle.textContent = `2023年度总结 - ${venue.name}`;
+            if (annualIncome) annualIncome.textContent = `¥${(totalIncome * 12 / 1000000).toFixed(1)}M`;
+            if (annualProfitRate) annualProfitRate.textContent = `${profitRate}%`;
+            if (annualEfficiency) annualEfficiency.textContent = `¥${efficiency}`;
+            
+            // 更新图表标题
+            const annualTrendTitle = document.getElementById('annual-trend-title');
+            const quarterlyTitle = document.getElementById('quarterly-title');
+            
+            if (annualTrendTitle) annualTrendTitle.textContent = `年度收支趋势 - ${venue.name}`;
+            if (quarterlyTitle) quarterlyTitle.textContent = `季度对比分析 - ${venue.name}`;
+        }
+        
+        // 切换对比模式
+        let comparisonMode = false;
+        function toggleComparison() {
+            comparisonMode = !comparisonMode;
+            const controls = document.getElementById('comparison-controls');
+            const chart = document.getElementById('comparison-chart');
+            const toggle = document.querySelector('.comparison-toggle');
+            
+            if (comparisonMode) {
+                controls.style.display = 'block';
+                chart.style.display = 'block';
+                toggle.textContent = '关闭对比';
+                updateComparison();
+            } else {
+                controls.style.display = 'none';
+                chart.style.display = 'none';
+                toggle.textContent = '启用对比';
+            }
+        }
+        
+        // 更新对比数据
+        function updateComparison() {
+            const venueA = document.getElementById('compare-venue-a').value;
+            const venueB = document.getElementById('compare-venue-b').value;
+            const dataA = venueData[venueA];
+            const dataB = venueData[venueB];
+            
+            const incomeA = dataA.income.reduce((sum, val) => sum + val, 0);
+            const expenseA = dataA.expense.reduce((sum, val) => sum + val, 0);
+            const profitRateA = ((incomeA - expenseA) / incomeA * 100).toFixed(1);
+            const efficiencyA = Math.round(incomeA / dataA.area);
+            
+            const incomeB = dataB.income.reduce((sum, val) => sum + val, 0);
+            const expenseB = dataB.expense.reduce((sum, val) => sum + val, 0);
+            const profitRateB = ((incomeB - expenseB) / incomeB * 100).toFixed(1);
+            const efficiencyB = Math.round(incomeB / dataB.area);
+            
+            const results = document.getElementById('comparison-results');
+            results.innerHTML = `
+                <div class="comparison-item">
+                    <span class="venue-label">${dataA.name}:</span>
+                    <span class="comparison-value">坪效 ¥${efficiencyA}/㎡ | 毛利率 ${profitRateA}%</span>
+                </div>
+                <div class="comparison-item">
+                    <span class="venue-label">${dataB.name}:</span>
+                    <span class="comparison-value">坪效 ¥${efficiencyB}/㎡ | 毛利率 ${profitRateB}%</span>
+                </div>
+            `;
+        }
+        
+        // 更新年度报告
+        function updateAnnualReport() {
+            const year = document.getElementById('annual-year').value;
+            const type = document.getElementById('annual-type').value;
+            const annualSummary = document.getElementById('annual-summary');
+            const allVenuesSummary = document.getElementById('all-venues-summary');
+            
+            if (type === 'single') {
+                annualSummary.style.display = 'block';
+                allVenuesSummary.style.display = 'none';
+                updateAnnualData();
+            } else if (type === 'all') {
+                annualSummary.style.display = 'none';
+                allVenuesSummary.style.display = 'block';
+            } else if (type === 'compare') {
+                annualSummary.style.display = 'none';
+                allVenuesSummary.style.display = 'block';
+            }
+        }
+        
+        // 页面加载时计算一次
+        document.addEventListener('DOMContentLoaded', function() {
+            calculateTotals();
+            updateHomeStats();
+            updateAnalysisData();
+            updateAnnualData();
+            
+            // 添加场地管理表单提交处理
+            const addVenueForm = document.getElementById('add-venue-form');
+            if (addVenueForm) {
+                addVenueForm.addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    alert('新场地添加成功！');
+                    // 这里可以添加实际的场地添加逻辑
+                });
+            }
+        });
+        
+        // 表单提交处理
+        document.querySelector('form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            alert('数据保存成功！');
+        });
+    </script>
+</body>
+</html> 

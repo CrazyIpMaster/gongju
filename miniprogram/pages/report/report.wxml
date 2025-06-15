@@ -1,0 +1,118 @@
+<view class="container">
+  <!-- 报告配置 -->
+  <view class="card form-section">
+    <view class="card-title">报告配置</view>
+    <t-cell-group>
+      <t-cell title="报告年份" note="2024年" hover bind:tap="onSelectYear">
+        <view slot="right-icon" class="custom-arrow">›</view>
+      </t-cell>
+      <t-cell title="报告类型" note="全场地汇总" hover bind:tap="onSelectType">
+        <view slot="right-icon" class="custom-arrow">›</view>
+      </t-cell>
+      <t-cell wx:if="{{reportType === 'single'}}" title="选择场地" note="金融中心A座" hover bind:tap="onSelectVenue">
+        <view slot="right-icon" class="custom-arrow">›</view>
+      </t-cell>
+    </t-cell-group>
+  </view>
+
+  <!-- 年度数据汇总 -->
+  <view class="card">
+    <view class="card-title">{{reportYear}}年度数据汇总</view>
+    <view class="grid-2">
+      <view class="data-item data-item-highlight">
+        <view class="data-value">¥{{yearSummary.totalIncome}}</view>
+        <view class="data-label">年度总收入</view>
+      </view>
+      <view class="data-item">
+        <view class="data-value">¥{{yearSummary.totalExpense}}</view>
+        <view class="data-label">年度总支出</view>
+      </view>
+      <view class="data-item">
+        <view class="data-value">{{yearSummary.avgProfitRate}}%</view>
+        <view class="data-label">平均毛利率</view>
+      </view>
+      <view class="data-item">
+        <view class="data-value">¥{{yearSummary.avgPerSquareMeter}}</view>
+        <view class="data-label">平均坪效</view>
+      </view>
+    </view>
+    
+    <t-divider class="section-divider" />
+    
+    <view class="best-performance">
+      <view class="card-subtitle">最佳表现</view>
+      <t-cell-group>
+        <t-cell title="最佳月份" note="{{yearSummary.bestMonth}}" />
+        <t-cell title="最高毛利率" note="{{yearSummary.maxProfitRate}}%" />
+        <t-cell title="最高坪效" note="¥{{yearSummary.maxPerSquareMeter}}" />
+      </t-cell-group>
+    </view>
+  </view>
+
+  <!-- 年度趋势分析 -->
+  <view class="card">
+    <view class="card-title">年度趋势分析</view>
+    <view class="chart-container">
+      <!-- 月度趋势图 -->
+      <view class="chart-placeholder">月度收支趋势图</view>
+    </view>
+    
+    <t-divider class="section-divider" />
+    
+    <view class="trend-analysis">
+      <view class="card-subtitle">趋势分析</view>
+      <view class="analysis-list">
+        <view class="list-item" wx:for="{{trendAnalysis}}" wx:key="index">
+          <view class="list-item-header">
+            <t-tag theme="{{item.type}}" variant="light" size="small">{{item.tag}}</t-tag>
+          </view>
+          <view class="list-item-content">{{item.content}}</view>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 季度对比 -->
+  <view class="card">
+    <view class="card-title">季度对比分析</view>
+    <view class="grid-2">
+      <view class="quarter-item" wx:for="{{quarterData}}" wx:key="quarter">
+        <view class="quarter-title">{{item.quarter}}</view>
+        <view class="quarter-metrics">
+          <view class="metric">
+            <view class="data-value" style="font-size: 32rpx;">¥{{item.income}}</view>
+            <view class="data-label">收入</view>
+          </view>
+          <view class="metric">
+            <view class="data-value" style="font-size: 32rpx;">{{item.profitRate}}%</view>
+            <view class="data-label">毛利率</view>
+          </view>
+        </view>
+        <t-tag theme="{{item.performance === 'excellent' ? 'success' : item.performance === 'good' ? 'primary' : 'warning'}}" 
+               variant="light" size="small">
+          {{item.performanceText}}
+        </t-tag>
+      </view>
+    </view>
+  </view>
+
+  <!-- 改进建议 -->
+  <view class="card">
+    <view class="card-title">改进建议</view>
+    <view class="suggestions-list">
+      <view class="list-item" wx:for="{{suggestions}}" wx:key="index">
+        <view class="list-item-header">
+          <view class="suggestion-icon">{{item.icon}}</view>
+          <view class="list-item-title">{{item.title}}</view>
+        </view>
+        <view class="list-item-content">{{item.content}}</view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 操作按钮 -->
+  <view class="button-group">
+    <t-button theme="default" block bind:tap="onExportPDF">导出PDF报告</t-button>
+    <t-button theme="primary" block bind:tap="onShareReport">分享报告</t-button>
+  </view>
+</view> 

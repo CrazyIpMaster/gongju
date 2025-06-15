@@ -1,0 +1,401 @@
+/**app.wxss**/
+/* TDesign 组件会自动引入自己的样式，这里添加全局基础样式 */
+
+/* 禁用 TDesign 字体加载，避免网络请求错误 */
+@font-face {
+  font-family: 't-icon';
+  src: none;
+}
+
+/* ==================== 全局基础样式 ==================== */
+page {
+  background-color: #f5f5f5;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  font-size: 28rpx;
+  line-height: 1.5;
+  color: #1a1a1a;
+}
+
+/* ==================== TDesign 组件样式优化 ==================== */
+.t-grid {
+  margin-bottom: 24rpx;
+}
+
+.t-grid-item {
+  border-radius: 12rpx !important;
+  overflow: hidden;
+}
+
+.t-cell-group {
+  border-radius: 12rpx;
+  overflow: hidden;
+  border: 1px solid #e6e8eb;
+}
+
+.t-cell {
+  background-color: white;
+  min-height: 88rpx;
+  padding: 24rpx 32rpx !important;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.t-cell:last-child {
+  border-bottom: none;
+}
+
+.t-cell__title {
+  font-size: 28rpx !important;
+  color: #1a1a1a !important;
+  font-weight: 500 !important;
+  white-space: nowrap !important;
+  min-width: 160rpx !important;
+  flex-shrink: 0 !important;
+  display: flex !important;
+  align-items: center !important;
+}
+
+.t-cell__note {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: flex-end !important;
+  flex: 1 !important;
+  min-height: 40rpx !important;
+  font-size: 28rpx !important;
+  color: #666 !important;
+}
+
+.t-cell__right-icon {
+  display: flex !important;
+  align-items: center !important;
+  margin-left: 16rpx !important;
+}
+
+/* 自定义箭头样式，替代 TDesign 的图标字体 */
+.custom-arrow {
+  color: #c5c5c5;
+  font-size: 24rpx;
+  margin-left: 16rpx;
+  display: flex;
+  align-items: center;
+}
+
+.t-input {
+  text-align: right !important;
+  min-width: 200rpx !important;
+}
+
+.t-input__control {
+  text-align: right !important;
+  font-size: 28rpx !important;
+  color: #1a1a1a !important;
+}
+
+.t-input__prefix,
+.t-input__suffix {
+  font-size: 28rpx !important;
+  color: #666 !important;
+}
+
+.t-switch {
+  margin: 0 !important;
+}
+
+.t-button {
+  border-radius: 8rpx;
+}
+
+/* ==================== 布局容器 ==================== */
+.container {
+  padding: 24rpx;
+  background-color: #f5f5f5;
+  min-height: 100vh;
+  box-sizing: border-box;
+}
+
+/* 特殊背景容器（如首页） */
+.container-gradient {
+  padding: 24rpx;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  min-height: 100vh;
+  box-sizing: border-box;
+}
+
+/* ==================== 卡片系统 ==================== */
+.card {
+  background: white;
+  border-radius: 16rpx;
+  padding: 32rpx;
+  margin-bottom: 24rpx;
+  box-shadow: 0 4rpx 20rpx rgba(0, 0, 0, 0.08);
+  box-sizing: border-box;
+}
+
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24rpx;
+}
+
+.card-title {
+  font-size: 32rpx;
+  font-weight: 600;
+  color: #1a1a1a;
+  margin: 0;
+  line-height: 1.4;
+}
+
+.card-subtitle {
+  font-size: 26rpx;
+  color: #666;
+  margin-top: 8rpx;
+  line-height: 1.4;
+}
+
+/* ==================== 网格系统 ==================== */
+.grid-2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24rpx;
+}
+
+.grid-3 {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20rpx;
+}
+
+.grid-4 {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20rpx;
+}
+
+/* ==================== 数据展示项 ==================== */
+.data-item {
+  text-align: center;
+  padding: 24rpx 20rpx;
+  background: #f8f9ff;
+  border-radius: 12rpx;
+  box-sizing: border-box;
+}
+
+.data-item-highlight {
+  background: linear-gradient(135deg, #366ef4 0%, #0052d9 100%);
+  color: white;
+}
+
+.data-value {
+  font-size: 36rpx;
+  font-weight: bold;
+  color: #366ef4;
+  margin-bottom: 8rpx;
+  line-height: 1.2;
+}
+
+.data-item-highlight .data-value {
+  color: white;
+}
+
+.data-label {
+  font-size: 24rpx;
+  color: #666;
+  line-height: 1.2;
+}
+
+.data-item-highlight .data-label {
+  color: rgba(255, 255, 255, 0.9);
+}
+
+/* ==================== 列表项 ==================== */
+.list-item {
+  padding: 24rpx;
+  margin-bottom: 16rpx;
+  background: #f8f9ff;
+  border-radius: 12rpx;
+  border: 1px solid #e6e8eb;
+  box-sizing: border-box;
+  transition: all 0.2s ease;
+}
+
+.list-item:last-child {
+  margin-bottom: 0;
+}
+
+.list-item:active {
+  background-color: #f0f2ff;
+  transform: scale(0.98);
+}
+
+.list-item-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16rpx;
+}
+
+.list-item-title {
+  font-size: 30rpx;
+  font-weight: 600;
+  color: #1a1a1a;
+  line-height: 1.3;
+}
+
+.list-item-subtitle {
+  font-size: 24rpx;
+  color: #666;
+  line-height: 1.3;
+}
+
+.list-item-content {
+  margin-top: 12rpx;
+  font-size: 26rpx;
+  color: #666;
+  line-height: 1.5;
+}
+
+/* ==================== 按钮组 ==================== */
+.button-group {
+  margin-top: 40rpx;
+  padding: 0 24rpx;
+  box-sizing: border-box;
+}
+
+.button-group .t-button {
+  margin-bottom: 16rpx;
+}
+
+.button-group .t-button:last-child {
+  margin-bottom: 0;
+}
+
+/* ==================== 表单样式 ==================== */
+.form-section {
+  margin-bottom: 32rpx;
+}
+
+.form-section:last-child {
+  margin-bottom: 0;
+}
+
+/* ==================== 图表容器 ==================== */
+.chart-container {
+  height: 400rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #f8f9ff;
+  border-radius: 12rpx;
+  margin: 20rpx 0;
+  box-sizing: border-box;
+}
+
+.chart-placeholder {
+  color: #999;
+  font-size: 28rpx;
+  text-align: center;
+}
+
+/* ==================== 通用列表容器 ==================== */
+.analysis-list,
+.history-list,
+.venue-list,
+.suggestions-list {
+  margin-top: 24rpx;
+}
+
+/* ==================== 标签和徽章 ==================== */
+.tag-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12rpx;
+  margin-top: 16rpx;
+}
+
+/* ==================== 分割线 ==================== */
+.section-divider {
+  margin: 32rpx 0;
+}
+
+/* ==================== 头部样式 ==================== */
+.page-header {
+  text-align: center;
+  color: white;
+  margin-bottom: 40rpx;
+  padding: 40rpx 0;
+}
+
+.page-title {
+  font-size: 48rpx;
+  font-weight: bold;
+  margin-bottom: 10rpx;
+  line-height: 1.2;
+}
+
+.page-subtitle {
+  font-size: 28rpx;
+  opacity: 0.9;
+  line-height: 1.3;
+}
+
+/* ==================== 操作区域 ==================== */
+.action-bar {
+  display: flex;
+  gap: 12rpx;
+  justify-content: flex-end;
+  margin-top: 20rpx;
+}
+
+/* ==================== 详情项 ==================== */
+.detail-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 12rpx;
+}
+
+.detail-item {
+  display: flex;
+  align-items: center;
+  font-size: 26rpx;
+  line-height: 1.4;
+}
+
+.detail-label {
+  color: #666;
+  width: 120rpx;
+  flex-shrink: 0;
+}
+
+.detail-value {
+  color: #333;
+  flex: 1;
+  word-break: break-all;
+}
+
+/* ==================== 状态样式 ==================== */
+.status-positive {
+  color: #52c41a;
+}
+
+.status-negative {
+  color: #ff4d4f;
+}
+
+.status-warning {
+  color: #faad14;
+}
+
+.status-info {
+  color: #1890ff;
+}
+
+/* ==================== 响应式调整 ==================== */
+@media (max-width: 750rpx) {
+  .grid-4 {
+    grid-template-columns: 1fr;
+  }
+  
+  .grid-3 {
+    grid-template-columns: 1fr 1fr;
+  }
+} 

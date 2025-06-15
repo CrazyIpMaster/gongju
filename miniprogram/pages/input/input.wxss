@@ -1,0 +1,8 @@
+/* 数据录入页面特有样式 */
+/* 所有基础样式已在 app.wxss 中定义 */
+
+/* 场地选择器样式 */
+.t-cell[title="场地选择"] .t-cell__note {
+  color: #366ef4 !important;
+  font-weight: 500 !important;
+} 
